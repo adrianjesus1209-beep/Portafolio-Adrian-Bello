@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Portfolio personal de Adrian Bello - Desarrollador Full Stack apasionado por crear experiencias digitales únicas.">
+    <meta name="keywords" content="desarrollador web, full stack, portfolio, react, javascript, node.js">
+    <meta name="author" content="Adrian Bello">
+    <title>Adrian Bello | Desarrollador Full Stack</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devicon/devicon@v2.16.0/devicon.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  </head>
+  <body>
+
+    <!-- ========== NAVBAR ========== -->
+    <header class="header" id="header">
+      <nav class="navbar">
+        <a href="#home" class="logo">
+          Adrian<span class="accent">.</span>
+        </a>
+        <ul class="nav-menu" id="nav-menu">
+          <li><a href="#home" class="nav-link active" id="nav-home">Inicio</a></li>
+          <li><a href="#about" class="nav-link" id="nav-about">Sobre mí</a></li>
+          <li><a href="#skills" class="nav-link" id="nav-skills">Habilidades</a></li>
+          <li><a href="#projects" class="nav-link" id="nav-projects">Proyectos</a></li>
+          <li><a href="#contact" class="nav-link" id="nav-contact">Contacto</a></li>
+        </ul>
+        <div class="nav-actions">
+          <a href="#contact" class="btn-hire">Contrátame</a>
+          <button type="button" class="hamburger" id="hamburger" aria-label="Abrir menú" aria-expanded="false">
+            <span></span>
+            <span></span>
+            <span></span>
+          </button>
+        </div>
+      </nav>
+    </header>
+
+    <!-- ========== HERO ========== -->
+    <section class="home" id="home">
+      <canvas id="particles-canvas"></canvas>
+
+      <div class="home-content">
+        <div class="home-text">
+          <div class="greeting reveal-left">
+            Hola, soy
+          </div>
+          <h1 class="home-title reveal-left">
+            Adrian <span class="accent">Bello</span>
+          </h1>
+          <div class="typed-wrapper reveal-left">
+            <span id="typed-text" class="typed-text"></span>
+            <span class="cursor-blink">|</span>
+          </div>
+          <p class="home-desc reveal-left">
+            Desarrollador Full Stack apasionado por crear experiencias digitales únicas,
+            interfaces modernas y soluciones tecnológicas que marcan la diferencia.
+          </p>
+          <div class="home-btns reveal-left">
+            <a href="#projects" class="btn btn-primary" id="hero-projects-btn">
+              <i class="bx bx-code-alt"></i> Ver Proyectos
+            </a>
+            <a href="#contact" class="btn btn-outline" id="hero-contact-btn">
+              <i class="bx bx-message-rounded"></i> Contactar
+            </a>
+          </div>
+          <div class="home-socials reveal-left">
+            <a href="#" class="social-link" aria-label="GitHub" id="social-github"><i class="fa-brands fa-github"></i></a>
+            <a href="#" class="social-link" aria-label="LinkedIn" id="social-linkedin"><i class="fa-brands fa-linkedin-in"></i></a>
+            <a href="#" class="social-link" aria-label="TikTok" id="social-tiktok"><i class="fa-brands fa-tiktok"></i></a>
+            <a href="#" class="social-link" aria-label="Facebook" id="social-facebook"><i class="fa-brands fa-facebook-f"></i></a>
+            <a href="#" class="social-link" aria-label="Twitter" id="social-twitter"><i class="fa-brands fa-x-twitter"></i></a>
+            <a href="#" class="social-link" aria-label="Instagram" id="social-instagram"><i class="fa-brands fa-instagram"></i></a>
+          </div>
+        </div>
+
+        <div class="home-image reveal-right">
+          <div class="image-wrapper">
+            <div class="glow-ring"></div>
+            <img src="image.webp" alt="Adrian Bello" class="profile-img">
+            <div class="orbit orbit-1">
+              <div class="orbit-dot"></div>
+            </div>
+            <div class="orbit orbit-2">
+              <div class="orbit-dot"></div>
+            </div>
+          </div>
+          <div class="float-badge badge-tl">
+            <i class="bx bx-code-alt"></i>
+            <span>100+ Proyectos</span>
+          </div>
+          <div class="float-badge badge-br">
+            <i class="bx bx-trophy"></i>
+            <span>5 Años Exp.</span>
+          </div>
+          <div class="float-badge badge-bl">
+            <i class="bx bx-smile"></i>
+            <span>50+ Clientes</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="scroll-indicator">
+        <div class="scroll-mouse">
+          <div class="scroll-dot"></div>
+        </div>
+        <span>Scroll</span>
+      </div>
+    </section>
+
+    <!-- ========== ABOUT ========== -->
+    <section class="about" id="about">
+      <div class="section-header">
+        <span class="section-tag reveal">Mi Historia</span>
+        <h2 class="section-title reveal">Sobre <span class="accent">Mí</span></h2>
+        <p class="section-subtitle reveal">Conóceme un poco más</p>
+      </div>
+
+      <div class="about-container">
+        <div class="about-image reveal-left">
+          <div class="about-img-frame">
+            <img src="image.webp" alt="Sobre mí">
+            <div class="about-img-deco deco-1"></div>
+            <div class="about-img-deco deco-2"></div>
+          </div>
+          <div class="exp-badge">
+            <span class="exp-number">5+</span>
+            <span class="exp-label">Años de<br>Experiencia</span>
+          </div>
+        </div>
+
+        <div class="about-text reveal-right">
+          <h3>Desarrollador Full Stack &amp; <span class="accent">Diseñador UI/UX</span></h3>
+          <p>
+            Soy un desarrollador web con más de <strong>5 años de experiencia</strong> creando
+            aplicaciones web modernas, escalables y visualmente impactantes. Me especializo en
+            construir soluciones digitales que no solo funcionan de forma impecable, sino que
+            también ofrecen una experiencia de usuario extraordinaria.
+          </p>
+          <p>
+            Mi enfoque combina sólido conocimiento técnico con sensibilidad de diseño, lo que
+            me permite entregar productos completos de principio a fin. Siempre estoy aprendiendo
+            nuevas tecnologías y explorando tendencias del sector.
+          </p>
+          <div class="about-stats">
+            <div class="stat-box">
+              <span class="stat-num" data-target="100">0</span><span class="accent">+</span>
+              <span class="stat-lbl">Proyectos</span>
+            </div>
+            <div class="stat-box">
+              <span class="stat-num" data-target="50">0</span><span class="accent">+</span>
+              <span class="stat-lbl">Clientes</span>
+            </div>
+            <div class="stat-box">
+              <span class="stat-num" data-target="5">0</span><span class="accent">+</span>
+              <span class="stat-lbl">Años Exp.</span>
+            </div>
+          </div>
+          <div class="about-actions">
+            <a href="#" class="btn btn-primary" id="download-cv" download>
+              <i class="bx bx-download"></i> Descargar CV
+            </a>
+            <a href="#contact" class="btn btn-outline" id="about-contact-btn">
+              <i class="bx bx-message-rounded"></i> Hablemos
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== SKILLS ========== -->
+    <section class="skills" id="skills">
+      <div class="section-header">
+        <span class="section-tag reveal">Mi Arsenal</span>
+        <h2 class="section-title reveal">Mis <span class="accent">Habilidades</span></h2>
+        <p class="section-subtitle reveal">Lenguajes, Frameworks y Herramientas clasificadas por área</p>
+      </div>
+
+      <div class="skills-categories reveal">
+        <!-- Frontend y Diseño -->
+        <div class="skills-category-card">
+          <div class="category-header">
+            <div class="category-icon"><i class="fa-solid fa-laptop-code"></i></div>
+            <h3>Frontend y Diseño</h3>
+          </div>
+          <div class="tech-tags">
+            <a href="https://developer.mozilla.org/es/docs/Web/HTML" target="_blank" rel="noopener noreferrer" class="tech-badge" data-tech="html5"><i class="fa-brands fa-html5"></i> <span>HTML5</span></a>
+            <a href="https://developer.mozilla.org/es/docs/Web/CSS" target="_blank" rel="noopener noreferrer" class="tech-badge" data-tech="css3"><i class="fa-brands fa-css3-alt"></i> <span>CSS3</span></a>
+            <a href="https://developer.mozilla.org/es/docs/Web/JavaScript" target="_blank" rel="noopener noreferrer" class="tech-badge" data-tech="js"><i class="fa-brands fa-js"></i> <span>JavaScript</span></a>
+            <a href="https://react.dev" target="_blank" rel="noopener noreferrer" class="tech-badge" data-tech="react"><i class="fa-brands fa-react"></i> <span>React</span></a>
+            <a href="https://getbootstrap.com" target="_blank" rel="noopener noreferrer" class="tech-badge" data-tech="bootstrap"><i class="fa-brands fa-bootstrap"></i> <span>Bootstrap</span></a>
+            <a href="https://www.adobe.com/products/photoshop.html" target="_blank" rel="noopener noreferrer" class="tech-badge" data-tech="photoshop">
+              <svg class="tech-icon-svg" viewBox="0 0 256 256" width="22" height="22" xmlns="http://www.w3.org/2000/svg">
+                <rect width="256" height="256" rx="48" fill="#001e36"/>
+                <rect x="8" y="8" width="240" height="240" rx="40" fill="none" stroke="#31a8ff" stroke-width="12"/>
+                <path fill="#31a8ff" d="M68 180V76h38c13 0 23 3 30 10s11 15 11 26c0 12-4 20-11 27s-17 10-30 10H88v31H68zm20-52h17c7 0 12-2 15-5s5-8 5-14c0-6-2-10-5-13s-8-5-15-5H88v37z"/>
+                <path fill="#31a8ff" d="M185 182c-9 0-16-2-22-6s-8-10-9-17h19c1 4 2 6 5 8s6 2 10 2c3 0 6-1 8-2s3-4 3-6c0-2-1-4-4-5l-10-3c-9-2-15-5-18-9s-5-9-5-15c0-7 3-13 9-17s14-6 24-6c8 0 15 2 20 6s8 9 9 16h-18c-1-3-2-5-4-7s-5-2-8-2c-3 0-5 1-7 2s-2 3-2 5c0 2 1 4 4 5l10 3c9 2 15 5 18 9s5 9 5 16c0 7-3 13-9 17s-14 6-24 6z"/>
+              </svg>
+              <span>Photoshop</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Backend y Bases de Datos -->
+        <div class="skills-category-card">
+          <div class="category-header">
+            <div class="category-icon"><i class="fa-solid fa-server"></i></div>
+            <h3>Backend y Bases de Datos</h3>
+          </div>
+          <div class="tech-tags">
+            <a href="https://www.php.net" target="_blank" rel="noopener noreferrer" class="tech-badge" data-tech="php"><i class="fa-brands fa-php"></i> <span>PHP</span></a>
+            <a href="https://laravel.com" target="_blank" rel="noopener noreferrer" class="tech-badge" data-tech="laravel"><i class="fa-brands fa-laravel"></i> <span>Laravel</span></a>
+            <a href="https://nodejs.org" target="_blank" rel="noopener noreferrer" class="tech-badge" data-tech="nodejs"><i class="fa-brands fa-node-js"></i> <span>Node.js</span></a>
+            <a href="https://www.python.org" target="_blank" rel="noopener noreferrer" class="tech-badge" data-tech="python"><i class="fa-brands fa-python"></i> <span>Python</span></a>
+            <a href="https://www.djangoproject.com" target="_blank" rel="noopener noreferrer" class="tech-badge" data-tech="django"><i class="fa-solid fa-cubes"></i> <span>Django</span></a>
+            <a href="https://www.oracle.com/java/" target="_blank" rel="noopener noreferrer" class="tech-badge" data-tech="java"><i class="fa-brands fa-java"></i> <span>Java</span></a>
+            <a href="https://isocpp.org" target="_blank" rel="noopener noreferrer" class="tech-badge" data-tech="cpp">
+              <svg class="tech-icon-svg" viewBox="0 0 128 128" width="22" height="22" xmlns="http://www.w3.org/2000/svg">
+                <polygon points="64,8 116,38 116,98 64,128 12,98 12,38" fill="#00599c"/>
+                <polygon points="64,8 116,38 116,98 64,128" fill="#004481"/>
+                <path fill="#ffffff" d="M68 40C51.5 40 38 53.5 38 70s13.5 30 30 30c9.5 0 18-4.5 23.5-11.5l-10-10C78 83 73.5 85.5 68 85.5 59.5 85.5 52.5 78.5 52.5 70S59.5 54.5 68 54.5c5.5 0 10 2.5 13.5 7l10-10C86 44.5 77.5 40 68 40z"/>
+                <path fill="#ffffff" d="M96 61h5v6h-5v5h-6v-5h-5v-6h5v-5h6v5zm17 0h5v6h-5v5h-6v-5h-5v-6h5v-5h6v5z"/>
+              </svg>
+              <span>C++</span>
+            </a>
+            <a href="https://www.mysql.com" target="_blank" rel="noopener noreferrer" class="tech-badge" data-tech="mysql"><i class="fa-solid fa-database"></i> <span>MySQL</span></a>
+            <a href="https://www.postgresql.org" target="_blank" rel="noopener noreferrer" class="tech-badge" data-tech="postgresql"><i class="fa-solid fa-database"></i> <span>PostgreSQL</span></a>
+          </div>
+        </div>
+
+        <!-- Herramientas y Entorno -->
+        <div class="skills-category-card">
+          <div class="category-header">
+            <div class="category-icon"><i class="fa-solid fa-screwdriver-wrench"></i></div>
+            <h3>Herramientas y Entorno</h3>
+          </div>
+          <div class="tech-tags">
+            <a href="https://git-scm.com" target="_blank" rel="noopener noreferrer" class="tech-badge" data-tech="git"><i class="fa-brands fa-git-alt"></i> <span>Git</span></a>
+            <a href="https://github.com" target="_blank" rel="noopener noreferrer" class="tech-badge" data-tech="github"><i class="fa-brands fa-github"></i> <span>GitHub</span></a>
+            <a href="https://www.docker.com" target="_blank" rel="noopener noreferrer" class="tech-badge" data-tech="docker"><i class="fa-brands fa-docker"></i> <span>Docker</span></a>
+            <a href="https://code.visualstudio.com" target="_blank" rel="noopener noreferrer" class="tech-badge" data-tech="vscode">
+              <svg class="tech-icon-svg" viewBox="0 0 24 24" width="22" height="22" fill="#007acc" xmlns="http://www.w3.org/2000/svg">
+                <path d="M23.15 2.587L18.21.21a1.494 1.494 0 0 0-1.705.29l-9.46 8.63-4.12-3.12a.999.999 0 0 0-1.41.21l-1.37 1.83a1 1 0 0 0 .21 1.41l3.52 2.67-3.52 2.67a1 1 0 0 0-.21 1.41l1.37 1.83a.999.999 0 0 0 1.41.21l4.12-3.12 9.46 8.63c.51.47 1.25.59 1.705.29l4.94-2.377A1.5 1.5 0 0 0 24 20.125V3.875a1.5 1.5 0 0 0-.85-1.288zm-5.15 14.542l-6.84-5.129 6.84-5.129v10.258z"/>
+              </svg>
+              <span>VS Code</span>
+            </a>
+            <a href="https://vercel.com" target="_blank" rel="noopener noreferrer" class="tech-badge" data-tech="vercel">
+              <svg class="tech-icon-svg" viewBox="0 0 512 512" width="20" height="20" fill="#ffffff"><path d="M256 48L512 464H0L256 48Z"/></svg>
+              <span>Vercel</span>
+            </a>
+            <a href="https://www.apachefriends.org" target="_blank" rel="noopener noreferrer" class="tech-badge" data-tech="xampp"><i class="fa-solid fa-server"></i> <span>XAMPP</span></a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== PROJECTS ========== -->
+    <section class="projects" id="projects">
+      <div class="section-header">
+        <span class="section-tag reveal">Mi Trabajo</span>
+        <h2 class="section-title reveal">Mis <span class="accent">Proyectos</span></h2>
+        <p class="section-subtitle reveal">Una selección de lo que he construido</p>
+      </div>
+
+      <div class="projects-filter reveal">
+        <button type="button" class="filter-btn active" data-filter="all" id="filter-all">Todos</button>
+        <button type="button" class="filter-btn" data-filter="web" id="filter-web">Web</button>
+        <button type="button" class="filter-btn" data-filter="app" id="filter-app">Apps</button>
+        <button type="button" class="filter-btn" data-filter="design" id="filter-design">Diseño</button>
+      </div>
+
+      <div class="projects-grid" id="projects-grid">
+
+        <article class="project-card reveal" data-category="web">
+          <div class="project-img">
+            <img src="project1.webp" alt="E-Commerce Platform" loading="lazy">
+            <div class="project-overlay">
+              <div class="project-links">
+                <a href="#" class="project-link" aria-label="Ver demo" id="p1-demo"><i class="bx bx-link-external"></i></a>
+                <a href="#" class="project-link" aria-label="Ver código" id="p1-code"><i class="bx bxl-github"></i></a>
+              </div>
+            </div>
+            <div class="project-featured">Destacado</div>
+          </div>
+          <div class="project-info">
+            <div class="project-tags">
+              <span class="tag">React</span>
+              <span class="tag">Node.js</span>
+              <span class="tag">MongoDB</span>
+            </div>
+            <h3>E-Commerce Platform</h3>
+            <p>Plataforma completa de comercio electrónico con panel de administración, pagos integrados y gestión de inventario en tiempo real.</p>
+          </div>
+        </article>
+
+        <article class="project-card reveal" data-category="app">
+          <div class="project-img">
+            <img src="project2.webp" alt="Task Manager App" loading="lazy">
+            <div class="project-overlay">
+              <div class="project-links">
+                <a href="#" class="project-link" aria-label="Ver demo" id="p2-demo"><i class="bx bx-link-external"></i></a>
+                <a href="#" class="project-link" aria-label="Ver código" id="p2-code"><i class="bx bxl-github"></i></a>
+              </div>
+            </div>
+          </div>
+          <div class="project-info">
+            <div class="project-tags">
+              <span class="tag">Vue.js</span>
+              <span class="tag">Firebase</span>
+            </div>
+            <h3>Task Manager App</h3>
+            <p>Aplicación de gestión de tareas con colaboración en tiempo real, notificaciones push y análisis de productividad.</p>
+          </div>
+        </article>
+
+        <article class="project-card reveal" data-category="design">
+          <div class="project-img">
+            <img src="project3.webp" alt="Landing Page Premium" loading="lazy">
+            <div class="project-overlay">
+              <div class="project-links">
+                <a href="#" class="project-link" aria-label="Ver demo" id="p3-demo"><i class="bx bx-link-external"></i></a>
+                <a href="#" class="project-link" aria-label="Ver código" id="p3-code"><i class="bx bxl-github"></i></a>
+              </div>
+            </div>
+          </div>
+          <div class="project-info">
+            <div class="project-tags">
+              <span class="tag">Figma</span>
+              <span class="tag">CSS</span>
+              <span class="tag">GSAP</span>
+            </div>
+            <h3>Landing Page Premium</h3>
+            <p>Diseño y desarrollo de landing page de alta conversión con animaciones avanzadas y optimización SEO.</p>
+          </div>
+        </article>
+
+        <article class="project-card reveal" data-category="web">
+          <div class="project-img">
+            <img src="project4.webp" alt="Dashboard Analytics" loading="lazy">
+            <div class="project-overlay">
+              <div class="project-links">
+                <a href="#" class="project-link" aria-label="Ver demo" id="p4-demo"><i class="bx bx-link-external"></i></a>
+                <a href="#" class="project-link" aria-label="Ver código" id="p4-code"><i class="bx bxl-github"></i></a>
+              </div>
+            </div>
+          </div>
+          <div class="project-info">
+            <div class="project-tags">
+              <span class="tag">Next.js</span>
+              <span class="tag">TypeScript</span>
+              <span class="tag">D3.js</span>
+            </div>
+            <h3>Dashboard Analytics</h3>
+            <p>Panel de análisis empresarial con gráficos interactivos, reportes automatizados y métricas en tiempo real.</p>
+          </div>
+        </article>
+
+        <article class="project-card reveal" data-category="app">
+          <div class="project-img">
+            <img src="project5.webp" alt="Fitness Tracker App" loading="lazy">
+            <div class="project-overlay">
+              <div class="project-links">
+                <a href="#" class="project-link" aria-label="Ver demo" id="p5-demo"><i class="bx bx-link-external"></i></a>
+                <a href="#" class="project-link" aria-label="Ver código" id="p5-code"><i class="bx bxl-github"></i></a>
+              </div>
+            </div>
+          </div>
+          <div class="project-info">
+            <div class="project-tags">
+              <span class="tag">React Native</span>
+              <span class="tag">Expo</span>
+              <span class="tag">AI</span>
+            </div>
+            <h3>Fitness Tracker App</h3>
+            <p>Aplicación móvil para seguimiento de ejercicios y nutrición personal con inteligencia artificial integrada.</p>
+          </div>
+        </article>
+
+        <article class="project-card reveal" data-category="design">
+          <div class="project-img">
+            <img src="project6.webp" alt="3D Portfolio" loading="lazy">
+            <div class="project-overlay">
+              <div class="project-links">
+                <a href="#" class="project-link" aria-label="Ver demo" id="p6-demo"><i class="bx bx-link-external"></i></a>
+                <a href="#" class="project-link" aria-label="Ver código" id="p6-code"><i class="bx bxl-github"></i></a>
+              </div>
+            </div>
+          </div>
+          <div class="project-info">
+            <div class="project-tags">
+              <span class="tag">Three.js</span>
+              <span class="tag">WebGL</span>
+              <span class="tag">GLSL</span>
+            </div>
+            <h3>3D Portfolio Experience</h3>
+            <p>Experiencia 3D interactiva con WebGL, animaciones de partículas y efectos visuales completamente inmersivos.</p>
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- ========== CONTACT ========== -->
+    <section class="contact" id="contact">
+      <div class="section-header">
+        <span class="section-tag reveal">Hablemos</span>
+        <h2 class="section-title reveal">Contáct<span class="accent">ame</span></h2>
+        <p class="section-subtitle reveal">Estoy listo para tu próximo proyecto</p>
+      </div>
+
+      <div class="contact-container">
+        <div class="contact-info reveal-left">
+          <h3>¿Tienes un proyecto en mente?</h3>
+          <p>Estoy disponible para proyectos freelance, colaboraciones o simplemente para charlar sobre tecnología. ¡No dudes en escribirme!</p>
+
+          <div class="contact-items">
+            <div class="contact-item">
+              <div class="contact-icon"><i class="bx bx-envelope"></i></div>
+              <div>
+                <span class="contact-label">Email</span>
+                <a href="mailto:hola@adriandev.com" id="contact-email">hola@adriandev.com</a>
+              </div>
+            </div>
+            <div class="contact-item">
+              <div class="contact-icon"><i class="bx bx-phone"></i></div>
+              <div>
+                <span class="contact-label">Teléfono</span>
+                <a href="tel:+1234567890" id="contact-phone">+1&nbsp;(234)&nbsp;567&#8209;890</a>
+              </div>
+            </div>
+            <div class="contact-item">
+              <div class="contact-icon"><i class="bx bx-map"></i></div>
+              <div>
+                <span class="contact-label">Ubicación</span>
+                <span id="contact-location">Madrid, España</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="contact-socials">
+            <a href="#" class="social-link" aria-label="GitHub" id="contact-github"><i class="fa-brands fa-github"></i></a>
+            <a href="#" class="social-link" aria-label="LinkedIn" id="contact-linkedin"><i class="fa-brands fa-linkedin-in"></i></a>
+            <a href="#" class="social-link" aria-label="TikTok" id="contact-tiktok"><i class="fa-brands fa-tiktok"></i></a>
+            <a href="#" class="social-link" aria-label="Facebook" id="contact-facebook"><i class="fa-brands fa-facebook-f"></i></a>
+            <a href="#" class="social-link" aria-label="Twitter" id="contact-twitter"><i class="fa-brands fa-x-twitter"></i></a>
+            <a href="#" class="social-link" aria-label="Instagram" id="contact-instagram"><i class="fa-brands fa-instagram"></i></a>
+          </div>
+        </div>
+
+        <form class="contact-form reveal-right" id="contact-form" onsubmit="handleSubmit(event)" novalidate>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="name">Nombre</label>
+              <input type="text" id="name" name="name" placeholder="Tu nombre" required autocomplete="name">
+            </div>
+            <div class="form-group">
+              <label for="email">Email</label>
+              <input type="email" id="email" name="email" placeholder="tu@email.com" required autocomplete="email">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="subject">Asunto</label>
+            <input type="text" id="subject" name="subject" placeholder="¿De qué quieres hablar?" required>
+          </div>
+          <div class="form-group">
+            <label for="message">Mensaje</label>
+            <textarea id="message" name="message" rows="5" placeholder="Cuéntame sobre tu proyecto..." required></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary btn-full" id="submit-btn">
+            <span class="btn-text">Enviar Mensaje</span>
+            <i class="bx bx-send"></i>
+          </button>
+          <div class="form-success" id="form-success">
+            <i class="bx bx-check-circle"></i>
+            <span>¡Mensaje enviado! Te responderé pronto.</span>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <!-- ========== FOOTER ========== -->
+    <footer class="footer">
+      <div class="footer-content">
+        <a href="#home" class="logo footer-logo">Adrian<span class="accent">.</span></a>
+        <p>Diseñado &amp; desarrollado con <span class="accent">❤</span> por Adrian Bello</p>
+        <p class="footer-copy">© 2025 Todos los derechos reservados.</p>
+      </div>
+      <a href="#home" class="back-to-top" id="back-to-top" aria-label="Volver arriba">
+        <i class="bx bx-chevron-up"></i>
+      </a>
+    </footer>
+
+    <script src="script.js"></script>
+  </body>
+</html>
