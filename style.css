@@ -1376,3 +1376,18 @@ section {
   font-weight: 600;
   color: #ffffff;
 }
+
+@media (max-width: 600px) {
+  .toast-modal {
+    bottom: 12rem;
+    padding: 1.2rem 2rem;
+    width: max-content;
+    max-width: 90vw;
+  }
+  .toast-modal span {
+    font-size: 1.35rem;
+  }
+  .toast-modal i {
+    font-size: 1.9rem;
+  }
+}

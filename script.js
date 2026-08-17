@@ -413,7 +413,7 @@ document.querySelectorAll('a[id="contact-email"], a[id="contact-email-icon"], a[
     }
 
     // 2. Show toast modal notification
-    showToast('📋 ¡Correo copiado al portapapeles! Redirigiendo a Gmail...');
+    showToast('¡Correo copiado! Redirigiendo...');
 
     // 3. Delay redirect slightly (1.5 seconds) so the user can read the modal first
     setTimeout(() => {
