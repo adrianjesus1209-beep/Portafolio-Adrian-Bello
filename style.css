@@ -1379,8 +1379,8 @@ section {
 
 @media (max-width: 600px) {
   .toast-modal {
-    bottom: 12rem;
-    padding: 1.2rem 2rem;
+    bottom: 24rem;
+    padding: 1.2rem 2.2rem;
     width: max-content;
     max-width: 90vw;
   }
