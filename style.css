@@ -1088,8 +1088,8 @@ section {
 .contact-icon {
   width: 5rem; height: 5rem;
   border-radius: 1rem;
-  background: var(--accent-glow);
-  border: 1px solid rgba(234,88,12,0.3);
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1099,10 +1099,30 @@ section {
   transition: var(--transition);
 }
 
-.contact-item:hover .contact-icon {
-  background: var(--accent);
-  color: #fff;
+.contact-icon-gmail {
+  background: rgba(234, 67, 53, 0.15);
+  border-color: rgba(234, 67, 53, 0.3);
+}
+
+.contact-icon-whatsapp {
+  background: rgba(37, 211, 102, 0.15);
+  border-color: rgba(37, 211, 102, 0.3);
+  color: #25D366;
+}
+
+.contact-item:hover .contact-icon-gmail {
+  background: rgba(234, 67, 53, 0.3);
+  border-color: #EA4335;
   transform: scale(1.1);
+  box-shadow: 0 0 15px rgba(234, 67, 53, 0.4);
+}
+
+.contact-item:hover .contact-icon-whatsapp {
+  background: #25D366;
+  color: #fff;
+  border-color: #25D366;
+  transform: scale(1.1);
+  box-shadow: 0 0 15px rgba(37, 211, 102, 0.5);
 }
 
 .contact-label {
