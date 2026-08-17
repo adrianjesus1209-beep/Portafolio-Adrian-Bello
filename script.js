@@ -2,6 +2,85 @@
    PORTFOLIO JAVASCRIPT
    ============================================= */
 
+/* ---- Calculate Dynamic Stats (Experience & Techs) ---- */
+(function calculateDynamicStats() {
+  // 1. Dynamic Experience calculation from university start year (2022)
+  const START_YEAR = 2022;
+  const currentYear = new Date().getFullYear();
+  const expYears = Math.max(1, currentYear - START_YEAR); // e.g., 2026 - 2022 = 4
+
+  // Update Experience elements in DOM
+  const statExp = document.getElementById('stat-exp');
+  if (statExp) statExp.setAttribute('data-target', expYears);
+
+  const heroExpBadge = document.getElementById('hero-exp-badge');
+  if (heroExpBadge) heroExpBadge.textContent = `${expYears}+ Años Exp.`;
+
+  const aboutExpNum = document.getElementById('about-exp-num');
+  if (aboutExpNum) aboutExpNum.textContent = `${expYears}+`;
+
+  const aboutExpText = document.getElementById('about-exp-text');
+  if (aboutExpText) aboutExpText.textContent = `${expYears} años`;
+
+  // 2. Dynamic Technology Count (counts all tech badges listed in the skills section)
+  document.addEventListener('DOMContentLoaded', () => {
+    const techBadges = document.querySelectorAll('.tech-badge');
+    const techCount = techBadges.length > 0 ? techBadges.length : 15;
+
+    const statTechs = document.getElementById('stat-techs');
+    if (statTechs) {
+      statTechs.setAttribute('data-target', techCount);
+      if (statTechs.dataset.counted) {
+        statTechs.dataset.counted = '';
+        animateCounter(statTechs);
+      }
+    }
+
+    const heroTechBadge = document.getElementById('hero-tech-badge');
+    if (heroTechBadge) heroTechBadge.textContent = `${techCount}+ Tecnologías`;
+  });
+})();
+
+/* ---- GitHub Stats: fetch real repo count ---- */
+(async function fetchGitHubStats() {
+  const GITHUB_USER = 'adrianjesus1209-beep';
+  const FALLBACK_REPOS = 10;
+
+  try {
+    const res = await fetch(`https://api.github.com/users/${GITHUB_USER}`, {
+      headers: { 'Accept': 'application/vnd.github+json' }
+    });
+
+    if (!res.ok) throw new Error('GitHub API error');
+
+    const data = await res.json();
+    const repoCount = data.public_repos ?? FALLBACK_REPOS;
+
+    // 1. Update the stat counter target in the About section
+    const repoStatEl = document.getElementById('stat-repos');
+    if (repoStatEl) {
+      repoStatEl.setAttribute('data-target', repoCount);
+      if (repoStatEl.dataset.counted) {
+        repoStatEl.dataset.counted = '';
+        animateCounter(repoStatEl);
+      }
+    }
+
+    // 2. Update the floating badge text in the Hero section
+    const heroBadge = document.querySelector('.badge-tl span');
+    if (heroBadge) {
+      heroBadge.textContent = `${repoCount}+ Proyectos`;
+    }
+
+  } catch (err) {
+    console.warn('No se pudo obtener el conteo de repos de GitHub:', err);
+    const heroBadge = document.querySelector('.badge-tl span');
+    if (heroBadge) heroBadge.textContent = `${FALLBACK_REPOS}+ Proyectos`;
+    const repoStatEl = document.getElementById('stat-repos');
+    if (repoStatEl) repoStatEl.setAttribute('data-target', FALLBACK_REPOS);
+  }
+})();
+
 /* ---- Navbar scroll effect ---- */
 const header = document.getElementById('header');
 const backToTop = document.getElementById('back-to-top');
@@ -295,37 +374,6 @@ filterBtns.forEach(btn => {
   });
 });
 
-/* ---- Contact form ---- */
-function handleSubmit(e) {
-  e.preventDefault();
-  const btn = document.getElementById('submit-btn');
-  const successEl = document.getElementById('form-success');
-  const form = document.getElementById('contact-form');
-
-  // Button loading state
-  btn.disabled = true;
-  btn.querySelector('.btn-text').textContent = 'Enviando...';
-  btn.querySelector('i').className = 'bx bx-loader-alt bx-spin';
-
-  // Simulate async send
-  setTimeout(() => {
-    btn.querySelector('.btn-text').textContent = '¡Enviado!';
-    btn.querySelector('i').className = 'bx bx-check';
-    btn.style.background = 'linear-gradient(135deg, #16a34a, #15803d)';
-
-    successEl.classList.add('show');
-
-    // Reset after 4 seconds
-    setTimeout(() => {
-      form.reset();
-      btn.disabled = false;
-      btn.querySelector('.btn-text').textContent = 'Enviar Mensaje';
-      btn.querySelector('i').className = 'bx bx-send';
-      btn.style.background = '';
-      successEl.classList.remove('show');
-    }, 4000);
-  }, 1500);
-}
 
 /* ---- Smooth scroll for all anchor links ---- */
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
@@ -337,3 +385,4 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     }
   });
 });
+

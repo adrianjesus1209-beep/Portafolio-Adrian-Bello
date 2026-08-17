@@ -1037,16 +1037,28 @@ section {
 }
 
 .contact-container {
-  display: grid;
-  grid-template-columns: 1fr 1.3fr;
-  gap: 6rem;
-  align-items: start;
+  display: flex;
+  justify-content: center;
 }
 
 .contact-info {
   display: flex;
   flex-direction: column;
   gap: 2.5rem;
+  max-width: 650px;
+  width: 100%;
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius);
+  padding: 4rem;
+  backdrop-filter: blur(12px);
+  text-align: center;
+  align-items: center;
+}
+
+.contact-items {
+  align-items: flex-start;
+  text-align: left;
 }
 
 .contact-info h3 {
