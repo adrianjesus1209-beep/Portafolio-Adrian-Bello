@@ -1029,6 +1029,59 @@ section {
   line-height: 1.7;
 }
 
+.projects-cta {
+  display: flex;
+  justify-content: center;
+  margin-top: 5rem;
+}
+
+.btn-github-glow {
+  background: rgba(15, 23, 42, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+  padding: 1.5rem 3.5rem;
+  border-radius: 50px;
+  font-size: 1.6rem;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 1.2rem;
+  backdrop-filter: blur(15px);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 0px var(--accent-glow);
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-github-glow i.fa-github {
+  font-size: 2.2rem;
+  color: #ffffff;
+  transition: transform 0.3s ease;
+}
+
+.btn-github-glow i.bx-right-arrow-alt {
+  font-size: 2.2rem;
+  color: var(--accent);
+  transition: transform 0.3s ease;
+}
+
+.btn-github-glow:hover {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #ffffff;
+  transform: translateY(-4px);
+  box-shadow: 0 15px 35px rgba(0, 168, 255, 0.4), 0 0 25px var(--accent-glow);
+}
+
+.btn-github-glow:hover i.fa-github {
+  transform: scale(1.15) rotate(-5deg);
+}
+
+.btn-github-glow:hover i.bx-right-arrow-alt {
+  color: #ffffff;
+  transform: translateX(6px);
+}
+
 /* =============================================
    CONTACT
    ============================================= */
