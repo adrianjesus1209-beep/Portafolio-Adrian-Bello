@@ -1093,11 +1093,29 @@ section {
   font-size: 1.6rem;
   font-weight: 500;
   color: var(--text);
-  transition: var(--transition);
+  transition: transform 0.3s ease, color 0.3s ease;
+  display: inline-block;
+}
+
+.contact-label {
+  display: block;
+  font-size: 1.2rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-weight: 600;
+  margin-bottom: 0.2rem;
+  transition: transform 0.3s ease, color 0.3s ease;
 }
 
 .contact-item:hover .contact-value {
   color: var(--accent);
+  transform: scale(1.06) translateX(4px);
+}
+
+.contact-item:hover .contact-label {
+  color: var(--text);
+  transform: scale(1.05) translateX(2px);
 }
 
 .contact-icon {
