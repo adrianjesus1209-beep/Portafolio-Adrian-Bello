@@ -1127,37 +1127,37 @@ section {
   align-items: center;
   justify-content: center;
   font-size: 2.2rem;
-  color: var(--accent);
+  color: #ffffff;
   flex-shrink: 0;
-  transition: var(--transition);
+  transition: all 0.3s ease;
 }
 
 .contact-icon-gmail {
-  background: rgba(234, 67, 53, 0.15);
-  border-color: rgba(234, 67, 53, 0.3);
-  color: #EA4335;
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.15);
+  color: #ffffff;
 }
 
 .contact-icon-whatsapp {
-  background: rgba(37, 211, 102, 0.15);
-  border-color: rgba(37, 211, 102, 0.3);
-  color: #25D366;
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.15);
+  color: #ffffff;
 }
 
 .contact-item:hover .contact-icon-gmail {
   background: #EA4335;
-  color: #fff;
+  color: #ffffff;
   border-color: #EA4335;
   transform: scale(1.1);
-  box-shadow: 0 0 15px rgba(234, 67, 53, 0.5);
+  box-shadow: 0 0 20px rgba(234, 67, 53, 0.5);
 }
 
 .contact-item:hover .contact-icon-whatsapp {
   background: #25D366;
-  color: #fff;
+  color: #ffffff;
   border-color: #25D366;
   transform: scale(1.1);
-  box-shadow: 0 0 15px rgba(37, 211, 102, 0.5);
+  box-shadow: 0 0 20px rgba(37, 211, 102, 0.5);
 }
 
 .contact-label {
