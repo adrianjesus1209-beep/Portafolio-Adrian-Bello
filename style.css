@@ -1102,6 +1102,7 @@ section {
 .contact-icon-gmail {
   background: rgba(234, 67, 53, 0.15);
   border-color: rgba(234, 67, 53, 0.3);
+  color: #EA4335;
 }
 
 .contact-icon-whatsapp {
@@ -1111,10 +1112,11 @@ section {
 }
 
 .contact-item:hover .contact-icon-gmail {
-  background: rgba(234, 67, 53, 0.3);
+  background: #EA4335;
+  color: #fff;
   border-color: #EA4335;
   transform: scale(1.1);
-  box-shadow: 0 0 15px rgba(234, 67, 53, 0.4);
+  box-shadow: 0 0 15px rgba(234, 67, 53, 0.5);
 }
 
 .contact-item:hover .contact-icon-whatsapp {
