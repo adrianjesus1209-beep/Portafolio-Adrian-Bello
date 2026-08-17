@@ -375,14 +375,50 @@ filterBtns.forEach(btn => {
 });
 
 
-/* ---- Smooth scroll for all anchor links ---- */
-document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-  anchor.addEventListener('click', (e) => {
-    const target = document.querySelector(anchor.getAttribute('href'));
-    if (target) {
-      e.preventDefault();
-      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+/* ---- Copy Email to Clipboard & Show Toast Modal before redirecting ---- */
+const EMAIL_ADDRESS = 'adrianjesus1209@gmail.com';
+const toastModal = document.getElementById('toast-modal');
+let toastTimeout;
+
+function showToast(message) {
+  const toastMsg = document.getElementById('toast-message');
+  if (toastMsg) toastMsg.textContent = message;
+
+  if (toastModal) {
+    toastModal.classList.add('show');
+    clearTimeout(toastTimeout);
+    toastTimeout = setTimeout(() => {
+      toastModal.classList.remove('show');
+    }, 2800);
+  }
+}
+
+// Select all email links in hero and contact section
+document.querySelectorAll('a[id="contact-email"], a[id="contact-email-icon"], a[id="social-email"]').forEach(emailBtn => {
+  emailBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+
+    const redirectUrl = emailBtn.getAttribute('href');
+
+    // 1. Copy email address to clipboard
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(EMAIL_ADDRESS);
+    } else {
+      const textarea = document.createElement('textarea');
+      textarea.value = EMAIL_ADDRESS;
+      document.body.appendChild(textarea);
+      textarea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textarea);
     }
+
+    // 2. Show toast modal notification
+    showToast('📋 ¡Correo copiado al portapapeles! Redirigiendo a Gmail...');
+
+    // 3. Delay redirect slightly (1.5 seconds) so the user can read the modal first
+    setTimeout(() => {
+      window.open(redirectUrl, '_blank');
+    }, 1500);
   });
 });
 
