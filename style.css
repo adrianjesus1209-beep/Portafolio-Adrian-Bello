@@ -1083,6 +1083,31 @@ section {
   display: flex;
   align-items: center;
   gap: 1.8rem;
+  padding: 1.2rem 2rem;
+  border-radius: 1.6rem;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--glass-border);
+  transition: var(--transition);
+  text-decoration: none;
+  color: var(--text);
+  cursor: pointer;
+}
+
+.contact-item:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.2);
+  transform: translateY(-2px);
+}
+
+.contact-value {
+  font-size: 1.6rem;
+  font-weight: 500;
+  color: var(--text);
+  transition: var(--transition);
+}
+
+.contact-item:hover .contact-value {
+  color: var(--accent);
 }
 
 .contact-icon {

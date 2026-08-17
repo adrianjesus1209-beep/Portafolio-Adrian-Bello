@@ -394,7 +394,7 @@ function showToast(message) {
 }
 
 // Select all email links in hero and contact section
-document.querySelectorAll('a[id="contact-email"], a[id="contact-email-icon"], a[id="social-email"]').forEach(emailBtn => {
+document.querySelectorAll('a[id="contact-email"], a[id="contact-email-block"], a[id="contact-email-icon"], a[id="social-email"]').forEach(emailBtn => {
   emailBtn.addEventListener('click', (e) => {
     e.preventDefault();
 
