@@ -137,8 +137,8 @@ hamburger.addEventListener('click', () => {
   document.body.style.overflow = isOpen ? 'hidden' : '';
 });
 
-// Close menu when a nav link is clicked
-document.querySelectorAll('.nav-link').forEach(link => {
+// Close menu when a nav link or hire button is clicked
+document.querySelectorAll('.nav-link, .btn-hire').forEach(link => {
   link.addEventListener('click', () => {
     navMenu.classList.remove('open');
     hamburger.classList.remove('open');
