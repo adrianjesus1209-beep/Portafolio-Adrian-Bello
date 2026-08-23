@@ -422,3 +422,46 @@ document.querySelectorAll('a[id="contact-email"], a[id="contact-email-block"], a
   });
 });
 
+/* ---- Interactive 3D Parallax Tilt for Hero Circle ---- */
+document.addEventListener('DOMContentLoaded', () => {
+  const homeImage = document.querySelector('.home-image');
+  const imageWrapper = document.querySelector('.image-wrapper');
+
+  if (homeImage && imageWrapper) {
+    homeImage.addEventListener('mousemove', (e) => {
+      const rect = homeImage.getBoundingClientRect();
+      const x = e.clientX - rect.left - rect.width / 2;
+      const y = e.clientY - rect.top - rect.height / 2;
+
+      const tiltX = (y / (rect.height / 2)) * -12;
+      const tiltY = (x / (rect.width / 2)) * 12;
+
+      imageWrapper.style.transform = `rotateX(${tiltX}deg) rotateY(${tiltY}deg) scale(1.02)`;
+    });
+
+    homeImage.addEventListener('mouseleave', () => {
+      imageWrapper.style.transform = `rotateX(0deg) rotateY(0deg) scale(1)`;
+    });
+  }
+
+  // Mobile Touch Support for Project Overlay Links
+  const cards = document.querySelectorAll('.project-card');
+  cards.forEach(card => {
+    card.addEventListener('touchstart', (e) => {
+      if (!e.target.closest('.project-link')) {
+        const isActive = card.classList.contains('touch-active');
+        cards.forEach(c => c.classList.remove('touch-active'));
+        if (!isActive) {
+          card.classList.add('touch-active');
+        }
+      }
+    }, { passive: true });
+  });
+
+  document.addEventListener('touchstart', (e) => {
+    if (!e.target.closest('.project-card')) {
+      cards.forEach(c => c.classList.remove('touch-active'));
+    }
+  }, { passive: true });
+});
+
