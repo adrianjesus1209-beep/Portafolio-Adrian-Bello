@@ -339,40 +339,200 @@ const skillObserver = new IntersectionObserver((entries) => {
 
 skillBars.forEach(bar => skillObserver.observe(bar));
 
-/* ---- Project filter ---- */
-const filterBtns = document.querySelectorAll('.filter-btn');
-const projectCards = document.querySelectorAll('.project-card');
+/* ---- GitHub Repositories Loader & Dynamic Projects Grid ---- */
+(async function fetchAndRenderGitHubProjects() {
+  const GITHUB_USER = 'adrianjesus1209-beep';
+  const projectsGrid = document.getElementById('projects-grid');
+  if (!projectsGrid) return;
 
-filterBtns.forEach(btn => {
-  btn.addEventListener('click', () => {
-    // Update active button
-    filterBtns.forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-
-    const filter = btn.getAttribute('data-filter');
-
-    projectCards.forEach(card => {
-      const category = card.getAttribute('data-category');
-      const show = filter === 'all' || category === filter;
-
-      card.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
-
-      if (show) {
-        card.style.display = '';
-        setTimeout(() => {
-          card.style.opacity = '1';
-          card.style.transform = '';
-        }, 10);
-      } else {
-        card.style.opacity = '0';
-        card.style.transform = 'scale(0.9)';
-        setTimeout(() => {
-          card.style.display = 'none';
-        }, 400);
-      }
+  try {
+    const res = await fetch(`https://api.github.com/users/${GITHUB_USER}/repos?sort=pushed&per_page=30`, {
+      headers: { 'Accept': 'application/vnd.github+json' }
     });
+
+    if (!res.ok) throw new Error(`GitHub API Error: ${res.status}`);
+
+    const repos = await res.json();
+    
+    // Filter out profile repository and forks if needed
+    const filteredRepos = repos.filter(repo => repo.name !== GITHUB_USER && !repo.fork);
+
+    if (filteredRepos.length === 0) return;
+
+    // Helper: Calculate status based on last pushed_at date and flags
+    const now = new Date();
+    const thirtyDaysAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+    const oneHundredEightyDaysAgo = new Date(now.getTime() - 180 * 24 * 60 * 60 * 1000);
+
+    const getStatusInfo = (repo) => {
+      if (repo.archived) {
+        return { label: 'Archivado', class: 'archived', icon: '<i class="bx bx-archive"></i>' };
+      }
+      const pushedDate = new Date(repo.pushed_at || repo.updated_at);
+      if (pushedDate >= thirtyDaysAgo) {
+        return { label: 'En desarrollo', class: 'in-dev', icon: '<span class="status-dot"></span>' };
+      } else if (pushedDate >= oneHundredEightyDaysAgo) {
+        return { label: 'Activo', class: 'active', icon: '<i class="bx bx-check-circle"></i>' };
+      } else {
+        return { label: 'Completado', class: 'active', icon: '<i class="bx bx-check-double"></i>' };
+      }
+    };
+
+    // Helper: Determine category (web, app, other)
+    const getCategory = (repo) => {
+      const lang = (repo.language || '').toLowerCase();
+      const name = repo.name.toLowerCase();
+      const topics = (repo.topics || []).join(' ').toLowerCase();
+
+      if (lang === 'kotlin' || lang === 'java' || lang === 'swift' || name.includes('app') || name.includes('reproductor') || topics.includes('android') || topics.includes('mobile')) {
+        return 'app';
+      }
+      if (lang === 'javascript' || lang === 'typescript' || lang === 'php' || lang === 'html' || lang === 'css' || lang === 'vue' || lang === 'blade') {
+        return 'web';
+      }
+      return 'other';
+    };
+
+    // Helper: Language Icon & Gradient class
+    const getLangInfo = (language) => {
+      const lang = (language || '').toLowerCase();
+      switch(lang) {
+        case 'kotlin':
+          return { bg: 'lang-bg-kotlin', icon: '<i class="devicon-kotlin-plain"></i>' };
+        case 'javascript':
+          return { bg: 'lang-bg-javascript', icon: '<i class="fa-brands fa-js"></i>' };
+        case 'php':
+          return { bg: 'lang-bg-php', icon: '<i class="fa-brands fa-php"></i>' };
+        case 'python':
+          return { bg: 'lang-bg-python', icon: '<i class="fa-brands fa-python"></i>' };
+        case 'html':
+          return { bg: 'lang-bg-html', icon: '<i class="fa-brands fa-html5"></i>' };
+        case 'css':
+          return { bg: 'lang-bg-css', icon: '<i class="fa-brands fa-css3-alt"></i>' };
+        case 'java':
+          return { bg: 'lang-bg-java', icon: '<i class="fa-brands fa-java"></i>' };
+        default:
+          return { bg: 'lang-bg-default', icon: '<i class="bx bx-code-alt"></i>' };
+      }
+    };
+
+    // Helper: Format Repo Name nicely
+    const formatRepoName = (name) => {
+      return name
+        .replace(/[-_]/g, ' ')
+        .replace(/\b\w/g, char => char.toUpperCase());
+    };
+
+    // Helper: Format Date
+    const formatDate = (dateString) => {
+      const d = new Date(dateString);
+      return d.toLocaleDateString('es-ES', { month: 'short', year: 'numeric' });
+    };
+
+    // Render cards dynamically
+    projectsGrid.innerHTML = filteredRepos.map(repo => {
+      const status = getStatusInfo(repo);
+      const category = getCategory(repo);
+      const langInfo = getLangInfo(repo.language);
+      const title = formatRepoName(repo.name);
+      const description = repo.description || `Proyecto de ${repo.language || 'desarrollo'} publicado en GitHub. Arquitectura limpia y código modular.`;
+      const primaryTag = repo.language || 'Software';
+      const pushedDateStr = formatDate(repo.pushed_at || repo.updated_at);
+      const demoUrl = repo.homepage && repo.homepage.trim() !== '' ? repo.homepage : repo.html_url;
+      const stars = repo.stargazers_count || 0;
+
+      return `
+        <article class="project-card reveal visible" data-category="${category}">
+          <div class="project-img ${langInfo.bg}">
+            <div class="status-badge ${status.class}">
+              ${status.icon}
+              <span>${status.label}</span>
+            </div>
+            <div class="repo-header-art">
+              ${langInfo.icon}
+            </div>
+            <div class="project-overlay">
+              <div class="project-links">
+                <a href="${demoUrl}" target="_blank" rel="noopener noreferrer" class="project-link" aria-label="Ver demo o repositorio" title="${repo.homepage ? 'Ver Demo en Vivo' : 'Ver Repositorio'}"><i class="bx ${repo.homepage ? 'bx-link-external' : 'bx-show'}"></i></a>
+                <a href="${repo.html_url}" target="_blank" rel="noopener noreferrer" class="project-link" aria-label="Ver código en GitHub" title="Ver Código en GitHub"><i class="bx bxl-github"></i></a>
+              </div>
+            </div>
+          </div>
+          <div class="project-info">
+            <div class="project-tags">
+              <span class="tag">${primaryTag}</span>
+              ${repo.topics ? repo.topics.slice(0, 2).map(t => `<span class="tag">${t}</span>`).join('') : ''}
+            </div>
+            <h3>${title}</h3>
+            <p>${description}</p>
+            <div class="repo-meta">
+              <span class="repo-meta-item" title="Estrellas"><i class="bx bx-star"></i> ${stars}</span>
+              <span class="repo-meta-item" title="Última actualización"><i class="bx bx-time"></i> ${pushedDateStr}</span>
+            </div>
+          </div>
+        </article>
+      `;
+    }).join('');
+
+    // Re-bind filter events and touch events for dynamically injected cards
+    bindProjectFilters();
+    bindTouchEvents();
+
+  } catch (err) {
+    console.warn('Error al cargar repositorios de GitHub:', err);
+    bindProjectFilters();
+  }
+})();
+
+function bindProjectFilters() {
+  const filterBtns = document.querySelectorAll('.filter-btn');
+  const projectCards = document.querySelectorAll('.project-card');
+
+  filterBtns.forEach(btn => {
+    btn.onclick = () => {
+      filterBtns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+
+      const filter = btn.getAttribute('data-filter');
+
+      projectCards.forEach(card => {
+        const category = card.getAttribute('data-category');
+        const show = filter === 'all' || category === filter;
+
+        card.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
+
+        if (show) {
+          card.style.display = '';
+          setTimeout(() => {
+            card.style.opacity = '1';
+            card.style.transform = '';
+          }, 10);
+        } else {
+          card.style.opacity = '0';
+          card.style.transform = 'scale(0.9)';
+          setTimeout(() => {
+            card.style.display = 'none';
+          }, 400);
+        }
+      });
+    };
   });
-});
+}
+
+function bindTouchEvents() {
+  const cards = document.querySelectorAll('.project-card');
+  cards.forEach(card => {
+    card.addEventListener('touchstart', (e) => {
+      if (!e.target.closest('.project-link')) {
+        const isActive = card.classList.contains('touch-active');
+        cards.forEach(c => c.classList.remove('touch-active'));
+        if (!isActive) {
+          card.classList.add('touch-active');
+        }
+      }
+    }, { passive: true });
+  });
+}
 
 
 /* ---- Copy Email to Clipboard & Show Toast Modal before redirecting ---- */
@@ -443,25 +603,5 @@ document.addEventListener('DOMContentLoaded', () => {
       imageWrapper.style.transform = `rotateX(0deg) rotateY(0deg) scale(1)`;
     });
   }
-
-  // Mobile Touch Support for Project Overlay Links
-  const cards = document.querySelectorAll('.project-card');
-  cards.forEach(card => {
-    card.addEventListener('touchstart', (e) => {
-      if (!e.target.closest('.project-link')) {
-        const isActive = card.classList.contains('touch-active');
-        cards.forEach(c => c.classList.remove('touch-active'));
-        if (!isActive) {
-          card.classList.add('touch-active');
-        }
-      }
-    }, { passive: true });
-  });
-
-  document.addEventListener('touchstart', (e) => {
-    if (!e.target.closest('.project-card')) {
-      cards.forEach(c => c.classList.remove('touch-active'));
-    }
-  }, { passive: true });
 });
 

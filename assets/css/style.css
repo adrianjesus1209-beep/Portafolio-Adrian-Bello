@@ -1155,6 +1155,103 @@ section {
   text-transform: uppercase;
 }
 
+/* GitHub Dynamic Status Badges */
+.status-badge {
+  position: absolute;
+  top: 1.5rem;
+  left: 1.5rem;
+  font-size: 1.1rem;
+  font-weight: 700;
+  padding: 0.4rem 1.2rem;
+  border-radius: 5rem;
+  letter-spacing: 0.05em;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  z-index: 4;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.status-badge.in-dev {
+  background: rgba(16, 185, 129, 0.25);
+  color: #34d399;
+  border-color: rgba(52, 211, 153, 0.4);
+}
+
+.status-badge.in-dev .status-dot {
+  width: 8px;
+  height: 8px;
+  background-color: #10b981;
+  border-radius: 50%;
+  box-shadow: 0 0 10px #10b981;
+  animation: pulseGreen 1.5s infinite;
+}
+
+@keyframes pulseGreen {
+  0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+  70% { transform: scale(1); box-shadow: 0 0 0 8px rgba(16, 185, 129, 0); }
+  100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+}
+
+.status-badge.active {
+  background: rgba(0, 168, 255, 0.25);
+  color: #38bdf8;
+  border-color: rgba(56, 189, 248, 0.4);
+}
+
+.status-badge.archived {
+  background: rgba(156, 163, 175, 0.25);
+  color: #d1d5db;
+  border-color: rgba(209, 213, 219, 0.4);
+}
+
+/* Dynamic Language Header Backgrounds */
+.repo-header-art {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.repo-header-art i {
+  font-size: 6.5rem;
+  opacity: 0.4;
+  transition: transform 0.5s ease, opacity 0.5s ease;
+}
+
+.project-card:hover .repo-header-art i {
+  transform: scale(1.15) rotate(-5deg);
+  opacity: 0.75;
+}
+
+.lang-bg-kotlin { background: linear-gradient(135deg, #2c1a4d 0%, #7F52FF 100%); color: #fff; }
+.lang-bg-javascript { background: linear-gradient(135deg, #3d3400 0%, #f7df1e 100%); color: #fff; }
+.lang-bg-php { background: linear-gradient(135deg, #1c1d33 0%, #777BB4 100%); color: #fff; }
+.lang-bg-python { background: linear-gradient(135deg, #132a3d 0%, #3776AB 100%); color: #fff; }
+.lang-bg-html { background: linear-gradient(135deg, #3d170b 0%, #E34F26 100%); color: #fff; }
+.lang-bg-css { background: linear-gradient(135deg, #09263b 0%, #1572B6 100%); color: #fff; }
+.lang-bg-java { background: linear-gradient(135deg, #213542 0%, #5382A1 100%); color: #fff; }
+.lang-bg-default { background: linear-gradient(135deg, #111827 0%, #1f2937 100%); color: #fff; }
+
+.repo-meta {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  font-size: 1.25rem;
+  color: var(--text-muted);
+  margin-top: 0.5rem;
+}
+
+.repo-meta-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
 .project-info {
   padding: 2.5rem;
   display: flex;
