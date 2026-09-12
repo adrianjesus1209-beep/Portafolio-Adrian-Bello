@@ -471,6 +471,26 @@
       </a>
     </footer>
 
+    <!-- ========== GALLERY LIGHTBOX MODAL ========== -->
+    <div id="gallery-modal" class="gallery-modal" role="dialog" aria-modal="true" aria-hidden="true">
+      <div class="gallery-modal-overlay" id="gallery-overlay"></div>
+      <div class="gallery-modal-content">
+        <button type="button" class="gallery-close" id="gallery-close" aria-label="Cerrar galería">&times;</button>
+        <div class="gallery-header">
+          <h3 id="gallery-title">Capturas del Proyecto</h3>
+          <span id="gallery-counter">1 / 1</span>
+        </div>
+        <div class="gallery-main">
+          <button type="button" class="gallery-nav prev" id="gallery-prev" aria-label="Anterior"><i class="bx bx-chevron-left"></i></button>
+          <div class="gallery-img-wrapper">
+            <img id="gallery-img" src="" alt="Captura de pantalla">
+          </div>
+          <button type="button" class="gallery-nav next" id="gallery-next" aria-label="Siguiente"><i class="bx bx-chevron-right"></i></button>
+        </div>
+        <div class="gallery-thumbnails" id="gallery-thumbnails"></div>
+      </div>
+    </div>
+
     <!-- ========== TOAST MODAL ========== -->
     <div id="toast-modal" class="toast-modal" role="status" aria-live="polite">
       <i class="bx bx-check-circle"></i>

@@ -444,6 +444,8 @@ skillBars.forEach(bar => skillObserver.observe(bar));
       const rawImgUrl = `https://raw.githubusercontent.com/${GITHUB_USER}/${repo.name}/${repo.default_branch || 'main'}/imagenes/preview.png`;
       const fallbackWebpUrl = `https://raw.githubusercontent.com/${GITHUB_USER}/${repo.name}/${repo.default_branch || 'main'}/imagenes/preview.webp`;
 
+      const hasHomepage = repo.homepage && repo.homepage.trim() !== '';
+
       return `
         <article class="project-card reveal visible" data-category="${category}">
           <div class="project-img ${langInfo.bg}">
@@ -457,7 +459,8 @@ skillBars.forEach(bar => skillObserver.observe(bar));
             </div>
             <div class="project-overlay">
               <div class="project-links">
-                <a href="${demoUrl}" target="_blank" rel="noopener noreferrer" class="project-link" aria-label="Ver demo o repositorio" title="${repo.homepage ? 'Ver Demo en Vivo' : 'Ver Repositorio'}"><i class="bx ${repo.homepage ? 'bx-link-external' : 'bx-show'}"></i></a>
+                <button type="button" class="project-link btn-open-gallery" data-repo="${repo.name}" data-branch="${repo.default_branch || 'main'}" data-title="${title}" aria-label="Ver capturas del proyecto" title="Ver Capturas / Galería"><i class="bx bx-show"></i></button>
+                ${hasHomepage ? `<a href="${repo.homepage}" target="_blank" rel="noopener noreferrer" class="project-link" aria-label="Ver sitio web en vivo" title="Ver Demo en Vivo (Sitio Hospedado)"><i class="bx bx-link-external"></i></a>` : ''}
                 <a href="${repo.html_url}" target="_blank" rel="noopener noreferrer" class="project-link" aria-label="Ver código en GitHub" title="Ver Código en GitHub"><i class="bx bxl-github"></i></a>
               </div>
             </div>
@@ -478,15 +481,173 @@ skillBars.forEach(bar => skillObserver.observe(bar));
       `;
     }).join('');
 
-    // Re-bind filter events and touch events for dynamically injected cards
+    // Re-bind filter events, touch events and gallery clicks
     bindProjectFilters();
     bindTouchEvents();
+    bindGalleryButtons();
 
   } catch (err) {
     console.warn('Error al cargar repositorios de GitHub:', err);
     bindProjectFilters();
   }
 })();
+
+/* ---- Lightbox Gallery Controller ---- */
+let currentGalleryImages = [];
+let currentGalleryIndex = 0;
+
+function bindGalleryButtons() {
+  const galleryBtns = document.querySelectorAll('.btn-open-gallery');
+  galleryBtns.forEach(btn => {
+    btn.onclick = (e) => {
+      e.stopPropagation();
+      const repoName = btn.getAttribute('data-repo');
+      const branch = btn.getAttribute('data-branch');
+      const title = btn.getAttribute('data-title');
+      openGalleryForRepo(repoName, branch, title);
+    };
+  });
+}
+
+async function openGalleryForRepo(repoName, branch, repoTitle) {
+  const GITHUB_USER = 'adrianjesus1209-beep';
+  const defaultBranch = branch || 'main';
+
+  // Generate candidate image URLs (preview1 to preview5 with png, webp, jpg extensions)
+  const candidateUrls = [];
+  
+  // Cover / Preview 1 candidates
+  candidateUrls.push(
+    `https://raw.githubusercontent.com/${GITHUB_USER}/${repoName}/${defaultBranch}/imagenes/preview.png`,
+    `https://raw.githubusercontent.com/${GITHUB_USER}/${repoName}/${defaultBranch}/imagenes/preview.webp`,
+    `https://raw.githubusercontent.com/${GITHUB_USER}/${repoName}/${defaultBranch}/imagenes/preview1.png`,
+    `https://raw.githubusercontent.com/${GITHUB_USER}/${repoName}/${defaultBranch}/imagenes/preview1.webp`,
+    `https://raw.githubusercontent.com/${GITHUB_USER}/${repoName}/${defaultBranch}/imagenes/preview1.jpg`
+  );
+
+  // Previews 2 to 5
+  for (let i = 2; i <= 5; i++) {
+    candidateUrls.push(
+      `https://raw.githubusercontent.com/${GITHUB_USER}/${repoName}/${defaultBranch}/imagenes/preview${i}.png`,
+      `https://raw.githubusercontent.com/${GITHUB_USER}/${repoName}/${defaultBranch}/imagenes/preview${i}.webp`,
+      `https://raw.githubusercontent.com/${GITHUB_USER}/${repoName}/${defaultBranch}/imagenes/preview${i}.jpg`
+    );
+  }
+
+  showToast('Cargando capturas del proyecto...');
+
+  // Probe image existence in parallel
+  const probeImage = (url) => new Promise(resolve => {
+    const img = new Image();
+    img.onload = () => resolve(url);
+    img.onerror = () => resolve(null);
+    img.src = url;
+  });
+
+  const results = await Promise.all(candidateUrls.map(probeImage));
+  const validImages = results.filter(url => url !== null);
+
+  if (validImages.length === 0) {
+    showToast('Aún no hay capturas agregadas en /imagenes');
+    return;
+  }
+
+  currentGalleryImages = [...new Set(validImages)];
+  currentGalleryIndex = 0;
+
+  const galleryModal = document.getElementById('gallery-modal');
+  const galleryTitle = document.getElementById('gallery-title');
+
+  if (galleryTitle) galleryTitle.textContent = repoTitle;
+
+  renderGalleryState();
+
+  if (galleryModal) {
+    galleryModal.classList.add('show');
+    galleryModal.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+  }
+}
+
+function renderGalleryState() {
+  const galleryImg = document.getElementById('gallery-img');
+  const galleryCounter = document.getElementById('gallery-counter');
+  const thumbnailsContainer = document.getElementById('gallery-thumbnails');
+
+  if (galleryImg && currentGalleryImages.length > 0) {
+    galleryImg.style.opacity = '0';
+    galleryImg.src = currentGalleryImages[currentGalleryIndex];
+    setTimeout(() => { galleryImg.style.opacity = '1'; }, 50);
+  }
+
+  if (galleryCounter) {
+    galleryCounter.textContent = `${currentGalleryIndex + 1} / ${currentGalleryImages.length}`;
+  }
+
+  if (thumbnailsContainer) {
+    thumbnailsContainer.innerHTML = currentGalleryImages.map((url, idx) => `
+      <div class="gallery-thumb ${idx === currentGalleryIndex ? 'active' : ''}" onclick="selectGalleryIndex(${idx})">
+        <img src="${url}" alt="Thumbnail ${idx + 1}">
+      </div>
+    `).join('');
+  }
+}
+
+function selectGalleryIndex(index) {
+  if (index >= 0 && index < currentGalleryImages.length) {
+    currentGalleryIndex = index;
+    renderGalleryState();
+  }
+}
+
+function closeGalleryModal() {
+  const galleryModal = document.getElementById('gallery-modal');
+  if (galleryModal) {
+    galleryModal.classList.remove('show');
+    galleryModal.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+  }
+}
+
+// Global modal navigation listeners
+document.addEventListener('DOMContentLoaded', () => {
+  const closeBtn = document.getElementById('gallery-close');
+  const overlay = document.getElementById('gallery-overlay');
+  const prevBtn = document.getElementById('gallery-prev');
+  const nextBtn = document.getElementById('gallery-next');
+
+  if (closeBtn) closeBtn.onclick = closeGalleryModal;
+  if (overlay) overlay.onclick = closeGalleryModal;
+
+  if (prevBtn) prevBtn.onclick = () => {
+    if (currentGalleryImages.length === 0) return;
+    currentGalleryIndex = (currentGalleryIndex - 1 + currentGalleryImages.length) % currentGalleryImages.length;
+    renderGalleryState();
+  };
+
+  if (nextBtn) nextBtn.onclick = () => {
+    if (currentGalleryImages.length === 0) return;
+    currentGalleryIndex = (currentGalleryIndex + 1) % currentGalleryImages.length;
+    renderGalleryState();
+  };
+
+  document.addEventListener('keydown', (e) => {
+    const galleryModal = document.getElementById('gallery-modal');
+    if (galleryModal && galleryModal.classList.contains('show')) {
+      if (e.key === 'Escape') closeGalleryModal();
+      if (e.key === 'ArrowLeft') {
+        if (currentGalleryImages.length === 0) return;
+        currentGalleryIndex = (currentGalleryIndex - 1 + currentGalleryImages.length) % currentGalleryImages.length;
+        renderGalleryState();
+      }
+      if (e.key === 'ArrowRight') {
+        if (currentGalleryImages.length === 0) return;
+        currentGalleryIndex = (currentGalleryIndex + 1) % currentGalleryImages.length;
+        renderGalleryState();
+      }
+    }
+  });
+});
 
 let isProjectsExpanded = false;
 const INITIAL_PROJECT_LIMIT = 12;
