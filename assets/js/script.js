@@ -441,6 +441,9 @@ skillBars.forEach(bar => skillObserver.observe(bar));
       const demoUrl = repo.homepage && repo.homepage.trim() !== '' ? repo.homepage : repo.html_url;
       const stars = repo.stargazers_count || 0;
 
+      const rawImgUrl = `https://raw.githubusercontent.com/${GITHUB_USER}/${repo.name}/${repo.default_branch || 'main'}/imagenes/preview.png`;
+      const fallbackWebpUrl = `https://raw.githubusercontent.com/${GITHUB_USER}/${repo.name}/${repo.default_branch || 'main'}/imagenes/preview.webp`;
+
       return `
         <article class="project-card reveal visible" data-category="${category}">
           <div class="project-img ${langInfo.bg}">
@@ -448,6 +451,7 @@ skillBars.forEach(bar => skillObserver.observe(bar));
               ${status.icon}
               <span>${status.label}</span>
             </div>
+            <img src="${rawImgUrl}" alt="${title}" loading="lazy" class="repo-preview-img" onerror="this.onerror=null; this.src='${fallbackWebpUrl}'; this.onerror=function(){ this.style.display='none'; };">
             <div class="repo-header-art">
               ${langInfo.icon}
             </div>
@@ -484,39 +488,95 @@ skillBars.forEach(bar => skillObserver.observe(bar));
   }
 })();
 
+let isProjectsExpanded = false;
+const INITIAL_PROJECT_LIMIT = 12;
+
+function applyProjectFiltersAndLimits() {
+  const activeBtn = document.querySelector('.filter-btn.active');
+  const currentFilter = activeBtn ? activeBtn.getAttribute('data-filter') : 'all';
+  const allCards = Array.from(document.querySelectorAll('.project-card'));
+
+  const matchingCards = allCards.filter(card => {
+    const category = card.getAttribute('data-category');
+    return currentFilter === 'all' || category === currentFilter;
+  });
+
+  const toggleBtn = document.getElementById('btn-toggle-projects');
+  const toggleText = document.getElementById('toggle-projects-text');
+  const toggleIcon = document.getElementById('toggle-projects-icon');
+
+  // Hide non-matching cards immediately
+  allCards.forEach(card => {
+    if (!matchingCards.includes(card)) {
+      card.style.display = 'none';
+      card.style.opacity = '0';
+    }
+  });
+
+  if (matchingCards.length > INITIAL_PROJECT_LIMIT) {
+    if (toggleBtn) toggleBtn.style.display = 'inline-flex';
+
+    matchingCards.forEach((card, index) => {
+      if (!isProjectsExpanded && index >= INITIAL_PROJECT_LIMIT) {
+        card.style.display = 'none';
+        card.style.opacity = '0';
+      } else {
+        card.style.display = '';
+        setTimeout(() => {
+          card.style.opacity = '1';
+          card.style.transform = '';
+        }, 10);
+      }
+    });
+
+    if (toggleText && toggleIcon) {
+      if (isProjectsExpanded) {
+        toggleText.textContent = 'Ver menos';
+        toggleIcon.className = 'bx bx-chevron-up';
+      } else {
+        const remaining = matchingCards.length - INITIAL_PROJECT_LIMIT;
+        toggleText.textContent = `Ver más proyectos (${remaining} más)`;
+        toggleIcon.className = 'bx bx-chevron-down';
+      }
+    }
+  } else {
+    if (toggleBtn) toggleBtn.style.display = 'none';
+    matchingCards.forEach(card => {
+      card.style.display = '';
+      setTimeout(() => {
+        card.style.opacity = '1';
+        card.style.transform = '';
+      }, 10);
+    });
+  }
+}
+
 function bindProjectFilters() {
   const filterBtns = document.querySelectorAll('.filter-btn');
-  const projectCards = document.querySelectorAll('.project-card');
-
   filterBtns.forEach(btn => {
     btn.onclick = () => {
       filterBtns.forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
-
-      const filter = btn.getAttribute('data-filter');
-
-      projectCards.forEach(card => {
-        const category = card.getAttribute('data-category');
-        const show = filter === 'all' || category === filter;
-
-        card.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
-
-        if (show) {
-          card.style.display = '';
-          setTimeout(() => {
-            card.style.opacity = '1';
-            card.style.transform = '';
-          }, 10);
-        } else {
-          card.style.opacity = '0';
-          card.style.transform = 'scale(0.9)';
-          setTimeout(() => {
-            card.style.display = 'none';
-          }, 400);
-        }
-      });
+      applyProjectFiltersAndLimits();
     };
   });
+
+  const toggleBtn = document.getElementById('btn-toggle-projects');
+  if (toggleBtn) {
+    toggleBtn.onclick = () => {
+      isProjectsExpanded = !isProjectsExpanded;
+      applyProjectFiltersAndLimits();
+
+      if (!isProjectsExpanded) {
+        const projectsSec = document.getElementById('projects');
+        if (projectsSec) {
+          projectsSec.scrollIntoView({ behavior: 'smooth' });
+        }
+      }
+    };
+  }
+
+  applyProjectFiltersAndLimits();
 }
 
 function bindTouchEvents() {

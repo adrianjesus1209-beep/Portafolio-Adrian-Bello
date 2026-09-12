@@ -1223,6 +1223,20 @@ section {
   transition: transform 0.5s ease, opacity 0.5s ease;
 }
 
+.repo-preview-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  transition: transform 0.5s ease;
+}
+
+.project-card:hover .repo-preview-img {
+  transform: scale(1.08);
+}
+
 .project-card:hover .repo-header-art i {
   transform: scale(1.15) rotate(-5deg);
   opacity: 0.75;
