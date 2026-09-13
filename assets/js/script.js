@@ -346,16 +346,18 @@ skillBars.forEach(bar => skillObserver.observe(bar));
   if (!projectsGrid) return;
 
   try {
-    const res = await fetch(`https://api.github.com/users/${GITHUB_USER}/repos?sort=pushed&per_page=30`, {
+    // per_page=100 soporta hasta 100 repos futuros; sort=pushed para ver los más activos primero
+    const res = await fetch(`https://api.github.com/users/${GITHUB_USER}/repos?sort=pushed&per_page=100`, {
       headers: { 'Accept': 'application/vnd.github+json' }
     });
 
     if (!res.ok) throw new Error(`GitHub API Error: ${res.status}`);
 
     const repos = await res.json();
-    
-    // Filter out profile repository and forks if needed
-    const filteredRepos = repos.filter(repo => repo.name !== GITHUB_USER && !repo.fork);
+
+    // Repos a excluir: perfil README (mismo nombre que usuario) y el portafolio mismo
+    const EXCLUDED_REPOS = [GITHUB_USER, 'Portafolio-Adrian-Bello'];
+    const filteredRepos = repos.filter(repo => !EXCLUDED_REPOS.includes(repo.name) && !repo.fork);
 
     if (filteredRepos.length === 0) return;
 
@@ -769,7 +771,8 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 let isProjectsExpanded = false;
-const INITIAL_PROJECT_LIMIT = 12;
+// Mostrar 6 inicialmente → el botón "Ver más" aparece cuando hay 7+ proyectos
+const INITIAL_PROJECT_LIMIT = 6;
 
 function applyProjectFiltersAndLimits() {
   const activeBtn = document.querySelector('.filter-btn.active');
@@ -845,6 +848,7 @@ function bindProjectFilters() {
   if (toggleBtn) {
     toggleBtn.onclick = () => {
       isProjectsExpanded = !isProjectsExpanded;
+      toggleBtn.classList.toggle('expanded', isProjectsExpanded);
       applyProjectFiltersAndLimits();
 
       if (!isProjectsExpanded) {
