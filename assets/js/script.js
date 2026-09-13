@@ -441,8 +441,8 @@ skillBars.forEach(bar => skillObserver.observe(bar));
       const demoUrl = repo.homepage && repo.homepage.trim() !== '' ? repo.homepage : repo.html_url;
       const stars = repo.stargazers_count || 0;
 
-      const repoRootUrl = `https://raw.githubusercontent.com/${GITHUB_USER}/${repo.name}/${repo.default_branch || 'main'}/`;
-      const rawImgUrl = `${repoRootUrl}imagenes/preview.png`;
+      const imgBaseUrl = `https://raw.githubusercontent.com/${GITHUB_USER}/${repo.name}/${repo.default_branch || 'main'}/imagenes/`;
+      const rawImgUrl = `${imgBaseUrl}preview.png`;
 
       const hasHomepage = repo.homepage && repo.homepage.trim() !== '';
 
@@ -453,7 +453,7 @@ skillBars.forEach(bar => skillObserver.observe(bar));
               ${status.icon}
               <span>${status.label}</span>
             </div>
-            <img src="${rawImgUrl}" alt="${title}" loading="lazy" class="repo-preview-img" data-repo-root="${repoRootUrl}" onerror="tryNextPreviewImg(this)">
+            <img src="${rawImgUrl}" alt="${title}" loading="lazy" class="repo-preview-img" data-base="${imgBaseUrl}" onerror="tryNextPreviewImg(this)">
             <div class="repo-header-art">
               ${langInfo.icon}
             </div>
@@ -494,29 +494,21 @@ skillBars.forEach(bar => skillObserver.observe(bar));
 
 // Intelligent Fallback chain for repo cover image
 function tryNextPreviewImg(img) {
-  const repoRoot = img.getAttribute('data-repo-root') || '';
   const fallbacks = [
-    'imagenes/preview.webp', 'imagenes/preview.jpg', 'imagenes/preview.jpeg',
-    'imagenes/preview1.png', 'imagenes/preview1.webp', 'imagenes/preview1.jpg',
-    'imagenes/1.png', 'imagenes/1.webp', 'imagenes/1.jpg',
-    'imagenes/imagen.png', 'imagenes/imagen1.png', 'imagenes/image1.png',
-    
-    'Imagenes/preview.png', 'Imagenes/preview.webp', 'Imagenes/preview.jpg',
-    'Imagenes/preview1.png', 'Imagenes/preview1.webp', 'Imagenes/preview1.jpg',
-    'Imagenes/1.png', 'Imagenes/1.webp', 'Imagenes/1.jpg',
-    
-    'images/preview.png', 'images/preview.webp', 'images/preview.jpg',
-    'images/preview1.png', 'images/preview1.webp', 'images/preview1.jpg',
-    'images/1.png', 'images/1.webp', 'images/1.jpg',
-    
-    'img/preview.png', 'img/preview.webp', 'img/preview.jpg',
-    'img/preview1.png', 'img/preview1.webp', 'img/preview1.jpg',
-    'img/1.png', 'img/1.webp', 'img/1.jpg'
+    'preview.webp', 'preview.jpg', 'preview.jpeg',
+    'preview1.png', 'preview1.webp', 'preview1.jpg',
+    '1.png', '1.webp', '1.jpg', '1.jpeg',
+    'imagen.png', 'imagen.webp', 'imagen.jpg',
+    'imagen1.png', 'imagen1.webp', 'imagen1.jpg',
+    'image.png', 'image.webp', 'image.jpg',
+    'image1.png', 'image1.webp', 'image1.jpg',
+    'foto.png', 'foto.webp', 'foto.jpg',
+    'foto1.png', 'foto1.webp', 'foto1.jpg'
   ];
   let idx = parseInt(img.getAttribute('data-fail-idx') || '0');
   if (idx < fallbacks.length) {
     img.setAttribute('data-fail-idx', idx + 1);
-    img.src = repoRoot + fallbacks[idx];
+    img.src = img.getAttribute('data-base') + fallbacks[idx];
   } else {
     img.style.display = 'none';
     if (img.nextElementSibling && img.nextElementSibling.classList.contains('repo-header-art')) {
@@ -545,55 +537,35 @@ function bindGalleryButtons() {
 async function openGalleryForRepo(repoName, branch, repoTitle) {
   const GITHUB_USER = 'adrianjesus1209-beep';
   const defaultBranch = branch || 'main';
-  const branches = [...new Set([defaultBranch, 'main', 'master'])];
-  const folders = ['imagenes', 'Imagenes', 'images', 'Images', 'img'];
-  const exts = ['.png', '.webp', '.jpg', '.jpeg'];
+  const base = `https://raw.githubusercontent.com/${GITHUB_USER}/${repoName}/${defaultBranch}/imagenes/`;
 
   const candidateUrls = [];
-
-  // Cover / Image 1 candidates
+  
+  // Cover / Image 1 variations
   const names1 = ['preview', 'preview1', '1', 'imagen', 'imagen1', 'image', 'image1', 'foto', 'foto1'];
-  branches.forEach(b => {
-    folders.forEach(f => {
-      names1.forEach(n => {
-        exts.forEach(e => {
-          candidateUrls.push(`https://raw.githubusercontent.com/${GITHUB_USER}/${repoName}/${b}/${f}/${n}${e}`);
-        });
-      });
-    });
+  const exts = ['.png', '.webp', '.jpg', '.jpeg'];
+  
+  names1.forEach(name => {
+    exts.forEach(ext => candidateUrls.push(`${base}${name}${ext}`));
   });
 
-  // Images 2 to 5 candidates
+  // Images 2 to 5 variations
   for (let i = 2; i <= 5; i++) {
     const namesI = [`preview${i}`, `${i}`, `imagen${i}`, `image${i}`, `foto${i}`];
-    branches.forEach(b => {
-      folders.forEach(f => {
-        namesI.forEach(n => {
-          exts.forEach(e => {
-            candidateUrls.push(`https://raw.githubusercontent.com/${GITHUB_USER}/${repoName}/${b}/${f}/${n}${e}`);
-          });
-        });
-      });
+    namesI.forEach(name => {
+      exts.forEach(ext => candidateUrls.push(`${base}${name}${ext}`));
     });
   }
 
   showToast('Buscando capturas del proyecto...');
 
-  // Probe image existence via fetch (with CORS) and fallback to Image element
-  const probeImage = async (url) => {
-    try {
-      const res = await fetch(url, { method: 'GET' });
-      if (res.ok) return url;
-    } catch (e) {}
-
-    return new Promise(resolve => {
-      const img = new Image();
-      img.crossOrigin = 'anonymous';
-      img.onload = () => resolve(url);
-      img.onerror = () => resolve(null);
-      img.src = url;
-    });
-  };
+  // Probe image existence in parallel
+  const probeImage = (url) => new Promise(resolve => {
+    const img = new Image();
+    img.onload = () => resolve(url);
+    img.onerror = () => resolve(null);
+    img.src = url;
+  });
 
   const results = await Promise.all(candidateUrls.map(probeImage));
   const validImages = results.filter(url => url !== null);
