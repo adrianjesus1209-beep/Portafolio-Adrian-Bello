@@ -441,8 +441,8 @@ skillBars.forEach(bar => skillObserver.observe(bar));
       const demoUrl = repo.homepage && repo.homepage.trim() !== '' ? repo.homepage : repo.html_url;
       const stars = repo.stargazers_count || 0;
 
-      const rawImgUrl = `https://raw.githubusercontent.com/${GITHUB_USER}/${repo.name}/${repo.default_branch || 'main'}/imagenes/preview.png`;
-      const fallbackWebpUrl = `https://raw.githubusercontent.com/${GITHUB_USER}/${repo.name}/${repo.default_branch || 'main'}/imagenes/preview.webp`;
+      const imgBaseUrl = `https://raw.githubusercontent.com/${GITHUB_USER}/${repo.name}/${repo.default_branch || 'main'}/imagenes/`;
+      const rawImgUrl = `${imgBaseUrl}preview.png`;
 
       const hasHomepage = repo.homepage && repo.homepage.trim() !== '';
 
@@ -453,7 +453,7 @@ skillBars.forEach(bar => skillObserver.observe(bar));
               ${status.icon}
               <span>${status.label}</span>
             </div>
-            <img src="${rawImgUrl}" alt="${title}" loading="lazy" class="repo-preview-img" onerror="this.onerror=null; this.src='${fallbackWebpUrl}'; this.onerror=function(){ this.style.display='none'; };">
+            <img src="${rawImgUrl}" alt="${title}" loading="lazy" class="repo-preview-img" data-base="${imgBaseUrl}" onerror="tryNextPreviewImg(this)">
             <div class="repo-header-art">
               ${langInfo.icon}
             </div>
@@ -492,6 +492,31 @@ skillBars.forEach(bar => skillObserver.observe(bar));
   }
 })();
 
+// Intelligent Fallback chain for repo cover image
+function tryNextPreviewImg(img) {
+  const fallbacks = [
+    'preview.webp', 'preview.jpg', 'preview.jpeg',
+    'preview1.png', 'preview1.webp', 'preview1.jpg',
+    '1.png', '1.webp', '1.jpg', '1.jpeg',
+    'imagen.png', 'imagen.webp', 'imagen.jpg',
+    'imagen1.png', 'imagen1.webp', 'imagen1.jpg',
+    'image.png', 'image.webp', 'image.jpg',
+    'image1.png', 'image1.webp', 'image1.jpg',
+    'foto.png', 'foto.webp', 'foto.jpg',
+    'foto1.png', 'foto1.webp', 'foto1.jpg'
+  ];
+  let idx = parseInt(img.getAttribute('data-fail-idx') || '0');
+  if (idx < fallbacks.length) {
+    img.setAttribute('data-fail-idx', idx + 1);
+    img.src = img.getAttribute('data-base') + fallbacks[idx];
+  } else {
+    img.style.display = 'none';
+    if (img.nextElementSibling && img.nextElementSibling.classList.contains('repo-header-art')) {
+      img.nextElementSibling.style.display = 'flex';
+    }
+  }
+}
+
 /* ---- Lightbox Gallery Controller ---- */
 let currentGalleryImages = [];
 let currentGalleryIndex = 0;
@@ -512,29 +537,27 @@ function bindGalleryButtons() {
 async function openGalleryForRepo(repoName, branch, repoTitle) {
   const GITHUB_USER = 'adrianjesus1209-beep';
   const defaultBranch = branch || 'main';
+  const base = `https://raw.githubusercontent.com/${GITHUB_USER}/${repoName}/${defaultBranch}/imagenes/`;
 
-  // Generate candidate image URLs (preview1 to preview5 with png, webp, jpg extensions)
   const candidateUrls = [];
   
-  // Cover / Preview 1 candidates
-  candidateUrls.push(
-    `https://raw.githubusercontent.com/${GITHUB_USER}/${repoName}/${defaultBranch}/imagenes/preview.png`,
-    `https://raw.githubusercontent.com/${GITHUB_USER}/${repoName}/${defaultBranch}/imagenes/preview.webp`,
-    `https://raw.githubusercontent.com/${GITHUB_USER}/${repoName}/${defaultBranch}/imagenes/preview1.png`,
-    `https://raw.githubusercontent.com/${GITHUB_USER}/${repoName}/${defaultBranch}/imagenes/preview1.webp`,
-    `https://raw.githubusercontent.com/${GITHUB_USER}/${repoName}/${defaultBranch}/imagenes/preview1.jpg`
-  );
+  // Cover / Image 1 variations
+  const names1 = ['preview', 'preview1', '1', 'imagen', 'imagen1', 'image', 'image1', 'foto', 'foto1'];
+  const exts = ['.png', '.webp', '.jpg', '.jpeg'];
+  
+  names1.forEach(name => {
+    exts.forEach(ext => candidateUrls.push(`${base}${name}${ext}`));
+  });
 
-  // Previews 2 to 5
+  // Images 2 to 5 variations
   for (let i = 2; i <= 5; i++) {
-    candidateUrls.push(
-      `https://raw.githubusercontent.com/${GITHUB_USER}/${repoName}/${defaultBranch}/imagenes/preview${i}.png`,
-      `https://raw.githubusercontent.com/${GITHUB_USER}/${repoName}/${defaultBranch}/imagenes/preview${i}.webp`,
-      `https://raw.githubusercontent.com/${GITHUB_USER}/${repoName}/${defaultBranch}/imagenes/preview${i}.jpg`
-    );
+    const namesI = [`preview${i}`, `${i}`, `imagen${i}`, `image${i}`, `foto${i}`];
+    namesI.forEach(name => {
+      exts.forEach(ext => candidateUrls.push(`${base}${name}${ext}`));
+    });
   }
 
-  showToast('Cargando capturas del proyecto...');
+  showToast('Buscando capturas del proyecto...');
 
   // Probe image existence in parallel
   const probeImage = (url) => new Promise(resolve => {
