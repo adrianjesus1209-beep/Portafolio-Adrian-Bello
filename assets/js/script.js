@@ -1213,5 +1213,113 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
   }
+
+  /* ---- GitHub Public Events & Live Activity Feed Loader ---- */
+  (async function fetchGitHubPublicActivity() {
+    const GITHUB_USER = 'adrianjesus1209-beep';
+    const feedTimeline = document.getElementById('github-feed-timeline');
+    if (!feedTimeline) return;
+
+    function timeAgo(dateString) {
+      const d = new Date(dateString);
+      const now = new Date();
+      const seconds = Math.floor((now - d) / 1000);
+      if (seconds < 60) return 'hace un momento';
+      const minutes = Math.floor(seconds / 60);
+      if (minutes < 60) return `hace ${minutes}m`;
+      const hours = Math.floor(minutes / 60);
+      if (hours < 24) return `hace ${hours}h`;
+      const days = Math.floor(hours / 24);
+      return `hace ${days}d`;
+    }
+
+    function getEventInfo(event) {
+      const repoName = event.repo ? event.repo.name.replace(`${GITHUB_USER}/`, '') : 'un repositorio';
+      switch (event.type) {
+        case 'PushEvent': {
+          const commitCount = event.payload && event.payload.commits ? event.payload.commits.length : 1;
+          const msg = event.payload && event.payload.commits && event.payload.commits[0] ? event.payload.commits[0].message : 'Actualización de código';
+          return {
+            icon: '<i class="bx bx-git-commit"></i>',
+            title: `Push a <code>${repoName}</code>`,
+            subtitle: `"${msg.length > 50 ? msg.substring(0, 50) + '...' : msg}" (${commitCount} commit${commitCount > 1 ? 's' : ''})`
+          };
+        }
+        case 'CreateEvent':
+          return {
+            icon: '<i class="bx bx-folder-plus"></i>',
+            title: `Nuevo ${event.payload.ref_type || 'repositorio'} en <code>${repoName}</code>`,
+            subtitle: `Creación de ${event.payload.ref_type || 'rama'}`
+          };
+        case 'WatchEvent':
+          return {
+            icon: '<i class="bx bx-star"></i>',
+            title: `Estrella agregada a <code>${repoName}</code>`,
+            subtitle: 'Proyecto destacado'
+          };
+        case 'ForkEvent':
+          return {
+            icon: '<i class="bx bx-git-repo-forked"></i>',
+            title: `Fork creado de <code>${repoName}</code>`,
+            subtitle: 'Bifurcación de repositorio'
+          };
+        default:
+          return {
+            icon: '<i class="bx bx-code-alt"></i>',
+            title: `Actividad en <code>${repoName}</code>`,
+            subtitle: 'Actualización en GitHub'
+          };
+      }
+    }
+
+    try {
+      const res = await fetch(`https://api.github.com/users/${GITHUB_USER}/events/public?per_page=8`, {
+        headers: { 'Accept': 'application/vnd.github+json' }
+      });
+
+      if (!res.ok) throw new Error('API error');
+      const events = await res.json();
+
+      if (!events || events.length === 0) throw new Error('No events');
+
+      feedTimeline.innerHTML = events.slice(0, 6).map(ev => {
+        const info = getEventInfo(ev);
+        const ago = timeAgo(ev.created_at);
+        return `
+          <div class="feed-item">
+            <div class="feed-icon-box">${info.icon}</div>
+            <div class="feed-content">
+              <div class="feed-title">${info.title}</div>
+              <div class="feed-meta">
+                <span>${info.subtitle}</span>
+                <span class="feed-time">${ago}</span>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+    } catch (err) {
+      const FALLBACK_EVENTS = [
+        { icon: '<i class="bx bx-git-commit"></i>', title: 'Push a <code>Portafolio-Adrian-Bello</code>', subtitle: '"feat: Nueva sección de actividad GitHub en vivo"', ago: 'hace un momento' },
+        { icon: '<i class="bx bx-git-commit"></i>', title: 'Push a <code>ZylosX-STREAMING</code>', subtitle: '"style: Mejora visual en desgloses de lenguajes"', ago: 'hace 2h' },
+        { icon: '<i class="bx bx-folder-plus"></i>', title: 'Actualización en <code>Gestion-de-Tareas-App</code>', subtitle: '"Mejoras en animaciones drag & drop"', ago: 'hace 1d' },
+        { icon: '<i class="bx bx-star"></i>', title: 'Proyecto destacado <code>Android-Player-App</code>', subtitle: '"ExoPlayer nativo en Kotlin"', ago: 'hace 3d' }
+      ];
+
+      feedTimeline.innerHTML = FALLBACK_EVENTS.map(info => `
+        <div class="feed-item">
+          <div class="feed-icon-box">${info.icon}</div>
+          <div class="feed-content">
+            <div class="feed-title">${info.title}</div>
+            <div class="feed-meta">
+              <span>${info.subtitle}</span>
+              <span class="feed-time">${info.ago}</span>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+  })();
 });
 

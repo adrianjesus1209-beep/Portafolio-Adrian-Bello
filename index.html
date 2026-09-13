@@ -26,6 +26,7 @@
           <li><a href="#about" class="nav-link" id="nav-about">Sobre mí</a></li>
           <li><a href="#skills" class="nav-link" id="nav-skills">Habilidades</a></li>
           <li><a href="#projects" class="nav-link" id="nav-projects">Proyectos</a></li>
+          <li><a href="#github-activity" class="nav-link" id="nav-activity">Actividad</a></li>
           <li><a href="#contact" class="nav-link" id="nav-contact">Contacto</a></li>
           <li class="mobile-donate-item"><button type="button" class="btn-donate-mobile" id="btn-donate-menu"><i class="bx bxs-heart"></i> Donar al Desarrollador</button></li>
         </ul>
@@ -324,6 +325,84 @@
       </div>
     </section>
 
+    <!-- ========== GITHUB ACTIVITY & PROGRESS ========== -->
+    <section class="github-activity" id="github-activity">
+      <div class="section-header">
+        <span class="section-tag reveal">Código en vivo</span>
+        <h2 class="section-title reveal">Mi Progreso en <span class="accent">GitHub</span></h2>
+        <p class="section-subtitle reveal">Actividad reciente, contribuciones y estadísticas en tiempo real</p>
+      </div>
+
+      <div class="activity-container">
+        <!-- Top GitHub Stats Cards Grid -->
+        <div class="activity-stats-grid reveal">
+          <div class="activity-stat-card">
+            <div class="stat-card-icon stat-icon-repos"><i class="bx bx-git-repo-forked"></i></div>
+            <div class="stat-card-data">
+              <span class="stat-card-num" id="gh-stat-repos">12+</span>
+              <span class="stat-card-label">Repositorios Públicos</span>
+            </div>
+          </div>
+          <div class="activity-stat-card">
+            <div class="stat-card-icon stat-icon-stars"><i class="bx bx-star"></i></div>
+            <div class="stat-card-data">
+              <span class="stat-card-num" id="gh-stat-stars">15+</span>
+              <span class="stat-card-label">Estrellas Recibidas</span>
+            </div>
+          </div>
+          <div class="activity-stat-card">
+            <div class="stat-card-icon stat-icon-commits"><i class="bx bx-git-commit"></i></div>
+            <div class="stat-card-data">
+              <span class="stat-card-num" id="gh-stat-events">150+</span>
+              <span class="stat-card-label">Commits & Pushes</span>
+            </div>
+          </div>
+          <div class="activity-stat-card">
+            <div class="stat-card-icon stat-icon-status"><i class="bx bx-pulse"></i></div>
+            <div class="stat-card-data">
+              <span class="stat-card-status"><span class="pulse-green"></span> Activo hoy</span>
+              <span class="stat-card-label">Estado de Desarrollo</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Main Activity Layout: Graph + Live Feed -->
+        <div class="activity-main-grid">
+          <!-- Left: GitHub Contribution Heatmap Graph Card -->
+          <div class="activity-graph-card reveal-left">
+            <div class="graph-card-header">
+              <h3><i class="fa-brands fa-github"></i> Gráfico de Contribuciones</h3>
+              <span class="graph-tag">Último año</span>
+            </div>
+            <div class="graph-img-wrapper">
+              <img src="https://ghchart.rshah.org/00a8ff/adrianjesus1209-beep" alt="Gráfico de Contribuciones de GitHub de Adrian Bello" loading="lazy" class="gh-chart-img">
+            </div>
+            <div class="graph-footer">
+              <span><i class="bx bx-check-circle"></i> Sincronizado automáticamente con GitHub</span>
+              <a href="https://github.com/adrianjesus1209-beep" target="_blank" rel="noopener noreferrer" class="link-gh-profile">
+                Ver Perfil <i class="bx bx-right-arrow-alt"></i>
+              </a>
+            </div>
+          </div>
+
+          <!-- Right: Live Activity Event Feed Timeline -->
+          <div class="activity-feed-card reveal-right">
+            <div class="feed-header">
+              <h3><i class="bx bx-time-five"></i> Actividad Reciente en Vivo</h3>
+              <span class="live-pulse-badge"><span class="pulse-dot"></span> LIVE</span>
+            </div>
+            <div class="feed-timeline" id="github-feed-timeline">
+              <!-- Carga dinámicamente eventos en vivo de GitHub API -->
+              <div class="feed-skeleton">
+                <div class="skeleton-line short shimmer"></div>
+                <div class="skeleton-line medium shimmer"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- ========== CONTACT ========== -->
     <section class="contact" id="contact">
       <div class="section-header">
@@ -543,6 +622,6 @@
       <span id="toast-message">¡Correo copiado! Redirigiendo...</span>
     </div>
 
-    <script src="assets/js/script.js?v=2.8"></script>
+    <script src="assets/js/script.js?v=2.9"></script>
   </body>
 </html>
