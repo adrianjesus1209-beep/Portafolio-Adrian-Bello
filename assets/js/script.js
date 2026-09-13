@@ -543,13 +543,15 @@ skillBars.forEach(bar => skillObserver.observe(bar));
           <div class="project-info">
             <div class="lang-progress-bar" title="Desglose de lenguajes del repositorio">
               ${repo.languagesList.map(l => `
-                <div class="lang-progress-segment" style="width: ${l.pct}%; background-color: ${l.color};" title="${l.name}: ${l.pct}%"></div>
+                <div class="lang-progress-segment" style="width: ${l.pct}%; background: linear-gradient(90deg, ${l.color}cc, ${l.color});" title="${l.name}: ${l.pct}%"></div>
               `).join('')}
             </div>
             <div class="project-tags">
               ${repo.languagesList.map(l => `
-                <span class="tag-lang" style="border-color: ${l.color}44; background: ${l.color}15;" title="${l.name}: ${l.pct}%">
-                  <span class="lang-dot" style="background-color: ${l.color}; box-shadow: 0 0 6px ${l.color};"></span>
+                <span class="tag-lang"
+                  style="border-color: ${l.color}55; background: ${l.color}12; box-shadow: inset 0 0 12px ${l.color}10, 0 2px 6px rgba(0,0,0,0.25);"
+                  title="${l.name}: ${l.pct}%">
+                  <span class="lang-dot" style="background-color: ${l.color}; box-shadow: 0 0 8px ${l.color}, 0 0 4px ${l.color}88;"></span>
                   <span class="lang-name">${l.name}</span>
                   <span class="lang-pct" style="color: ${l.color};">${l.pct}%</span>
                 </span>
