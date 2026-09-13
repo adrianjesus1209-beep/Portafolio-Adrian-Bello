@@ -1015,27 +1015,57 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // Copy to clipboard for all .btn-copy elements
-  document.querySelectorAll('.btn-copy').forEach(copyBtn => {
-    copyBtn.addEventListener('click', (e) => {
-      e.preventDefault();
-      const textToCopy = copyBtn.getAttribute('data-copy');
-      if (!textToCopy) return;
+  // Universal Copy to Clipboard Event Listener (delegated for max reliability)
+  document.addEventListener('click', async (e) => {
+    const copyBtn = e.target.closest('.btn-copy');
+    if (!copyBtn) return;
 
-      if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(textToCopy);
-      } else {
+    e.preventDefault();
+    e.stopPropagation();
+
+    const textToCopy = copyBtn.getAttribute('data-copy');
+    if (!textToCopy) return;
+
+    const label = copyBtn.getAttribute('title') || 'Dato';
+    let copied = false;
+
+    // 1. Try modern navigator.clipboard API if available
+    if (navigator.clipboard && window.isSecureContext) {
+      try {
+        await navigator.clipboard.writeText(textToCopy);
+        copied = true;
+      } catch (err) {
+        console.warn('navigator.clipboard async error, trying fallback:', err);
+      }
+    }
+
+    // 2. Synchronous execCommand fallback (for HTTP localhost, mobile, & non-HTTPS)
+    if (!copied) {
+      try {
         const textarea = document.createElement('textarea');
         textarea.value = textToCopy;
+        textarea.setAttribute('readonly', '');
+        textarea.style.position = 'fixed';
+        textarea.style.left = '-9999px';
+        textarea.style.top = '-9999px';
+        textarea.style.opacity = '0';
         document.body.appendChild(textarea);
+        textarea.focus();
         textarea.select();
-        document.execCommand('copy');
+        textarea.setSelectionRange(0, 99999);
+        copied = document.execCommand('copy');
         document.body.removeChild(textarea);
+      } catch (err) {
+        console.error('execCommand copy failed:', err);
       }
+    }
 
-      const label = copyBtn.getAttribute('title') || 'Dato';
+    // 3. Show feedback toast
+    if (copied) {
       showToast(`¡${label} copiado! 📋`);
-    });
+    } else {
+      showToast(`Copia este texto: ${textToCopy}`);
+    }
   });
 
   // Click QR Code to enlarge in full-screen Lightbox Gallery
