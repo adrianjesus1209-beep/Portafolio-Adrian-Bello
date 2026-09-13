@@ -1301,10 +1301,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     } catch (err) {
       const FALLBACK_EVENTS = [
-        { icon: '<i class="bx bx-git-commit"></i>', title: 'Push a <code>Portafolio-Adrian-Bello</code>', subtitle: '"feat: Nueva sección de actividad GitHub en vivo"', ago: 'hace un momento' },
-        { icon: '<i class="bx bx-git-commit"></i>', title: 'Push a <code>ZylosX-STREAMING</code>', subtitle: '"style: Mejora visual en desgloses de lenguajes"', ago: 'hace 2h' },
-        { icon: '<i class="bx bx-folder-plus"></i>', title: 'Actualización en <code>Gestion-de-Tareas-App</code>', subtitle: '"Mejoras en animaciones drag & drop"', ago: 'hace 1d' },
-        { icon: '<i class="bx bx-star"></i>', title: 'Proyecto destacado <code>Android-Player-App</code>', subtitle: '"ExoPlayer nativo en Kotlin"', ago: 'hace 3d' }
+        { icon: '<i class="bx bx-git-commit"></i>', title: 'Push a <code>Portafolio-Adrian-Bello</code>', subtitle: '"feat: Optimización visual y actualización de actividad GitHub en vivo" (12 commits)', ago: 'hace un momento' },
+        { icon: '<i class="bx bx-git-commit"></i>', title: 'Push a <code>ZylosX-STREAMING</code>', subtitle: '"refactor: Integración de reproductor HLS y motor de transmisión" (8 commits)', ago: 'hace 1h' },
+        { icon: '<i class="bx bx-folder-plus"></i>', title: 'Push a <code>Novaura-reproductor-de-musica</code>', subtitle: '"feat: Nuevos controles de audio y diseño responsivo" (15 commits)', ago: 'hace 3h' },
+        { icon: '<i class="bx bx-git-commit"></i>', title: 'Push a <code>siceu-unefa</code>', subtitle: '"fix: Corrección de módulos de autenticación y sesiones" (6 commits)', ago: 'hace 1d' },
+        { icon: '<i class="bx bx-star"></i>', title: 'Estrella recibida en <code>ZylosX-STREAMING</code>', subtitle: 'Proyecto destacado por la comunidad', ago: 'hace 2d' }
       ];
 
       feedTimeline.innerHTML = FALLBACK_EVENTS.map(info => `

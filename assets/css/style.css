@@ -3044,7 +3044,7 @@ section {
   width: 100%;
   overflow-x: auto;
   padding: 2rem 1.4rem;
-  background: rgba(6, 10, 18, 0.75);
+  background: rgba(6, 10, 18, 0.85);
   border: 1px solid rgba(14, 165, 233, 0.25);
   border-radius: 1.4rem;
   display: flex;
@@ -3056,11 +3056,11 @@ section {
 
 .gh-chart-img {
   width: 100%;
-  min-width: 58rem;
+  min-width: 62rem;
   max-width: 100%;
   height: auto;
   object-fit: contain;
-  filter: invert(0.88) hue-rotate(180deg) brightness(1.2) contrast(1.3);
+  filter: brightness(1.25) contrast(1.2) saturate(1.3);
 }
 
 .graph-footer {
