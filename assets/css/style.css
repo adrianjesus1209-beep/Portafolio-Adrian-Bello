@@ -1287,7 +1287,17 @@ section {
   border: 1px solid var(--accent-glow);
   padding: 0.3rem 1rem;
   border-radius: 5rem;
+  transition: var(--transition);
 }
+
+.tag[data-lang="PHP"] { color: #a4b1e6; background: rgba(119, 123, 180, 0.18); border-color: rgba(119, 123, 180, 0.35); }
+.tag[data-lang="JavaScript"] { color: #f7df1e; background: rgba(247, 223, 30, 0.18); border-color: rgba(247, 223, 30, 0.35); }
+.tag[data-lang="CSS"] { color: #38bdf8; background: rgba(21, 114, 182, 0.18); border-color: rgba(21, 114, 182, 0.35); }
+.tag[data-lang="HTML"] { color: #f97316; background: rgba(227, 79, 38, 0.18); border-color: rgba(227, 79, 38, 0.35); }
+.tag[data-lang="Kotlin"] { color: #a855f7; background: rgba(127, 82, 255, 0.18); border-color: rgba(127, 82, 255, 0.35); }
+.tag[data-lang="Python"] { color: #38bdf8; background: rgba(55, 118, 171, 0.18); border-color: rgba(55, 118, 171, 0.35); }
+.tag[data-lang="Java"] { color: #f97316; background: rgba(231, 111, 0, 0.18); border-color: rgba(231, 111, 0, 0.35); }
+.tag[data-lang="TypeScript"] { color: #60a5fa; background: rgba(49, 120, 198, 0.18); border-color: rgba(49, 120, 198, 0.35); }
 
 .project-info h3 {
   font-size: 2rem;

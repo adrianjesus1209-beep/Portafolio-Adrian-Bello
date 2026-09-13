@@ -429,14 +429,30 @@ skillBars.forEach(bar => skillObserver.observe(bar));
       return d.toLocaleDateString('es-ES', { month: 'short', year: 'numeric' });
     };
 
-    // Render cards dynamically
-    projectsGrid.innerHTML = filteredRepos.map(repo => {
+    // Fetch languages breakdown for all repos in parallel
+    const reposWithLangs = await Promise.all(filteredRepos.map(async repo => {
+      try {
+        if (repo.languages_url) {
+          const langRes = await fetch(repo.languages_url, { headers: { 'Accept': 'application/vnd.github+json' } });
+          if (langRes.ok) {
+            const langData = await langRes.json();
+            const topLangs = Object.keys(langData).slice(0, 4);
+            if (topLangs.length > 0) return { ...repo, topLanguages: topLangs };
+          }
+        }
+      } catch (e) {
+        console.warn('Error al obtener lenguajes para', repo.name, e);
+      }
+      return { ...repo, topLanguages: repo.language ? [repo.language] : ['Software'] };
+    }));
+
+    // Render cards dynamically with full language badges breakdown
+    projectsGrid.innerHTML = reposWithLangs.map(repo => {
       const status = getStatusInfo(repo);
       const category = getCategory(repo);
-      const langInfo = getLangInfo(repo.language);
+      const langInfo = getLangInfo(repo.language || (repo.topLanguages && repo.topLanguages[0]));
       const title = formatRepoName(repo.name);
-      const description = repo.description || `Proyecto de ${repo.language || 'desarrollo'} publicado en GitHub. Arquitectura limpia y código modular.`;
-      const primaryTag = repo.language || 'Software';
+      const description = repo.description || `Proyecto de ${repo.language || (repo.topLanguages && repo.topLanguages.join(', ')) || 'desarrollo'} publicado en GitHub. Arquitectura limpia y código modular.`;
       const pushedDateStr = formatDate(repo.pushed_at || repo.updated_at);
       const demoUrl = repo.homepage && repo.homepage.trim() !== '' ? repo.homepage : repo.html_url;
       const stars = repo.stargazers_count || 0;
@@ -445,6 +461,8 @@ skillBars.forEach(bar => skillObserver.observe(bar));
       const initialImgUrl = `${repoRawUrl}imagenes/preview.png`;
 
       const hasHomepage = repo.homepage && repo.homepage.trim() !== '';
+
+      const allTags = [...new Set([...(repo.topLanguages || []), ...(repo.topics || [])])].slice(0, 5);
 
       return `
         <article class="project-card reveal visible" data-category="${category}">
@@ -467,8 +485,7 @@ skillBars.forEach(bar => skillObserver.observe(bar));
           </div>
           <div class="project-info">
             <div class="project-tags">
-              <span class="tag">${primaryTag}</span>
-              ${repo.topics ? repo.topics.slice(0, 2).map(t => `<span class="tag">${t}</span>`).join('') : ''}
+              ${allTags.map(tag => `<span class="tag" data-lang="${tag}">${tag}</span>`).join('')}
             </div>
             <h3>${title}</h3>
             <p>${description}</p>
