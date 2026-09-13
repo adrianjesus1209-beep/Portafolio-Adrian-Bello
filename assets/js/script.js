@@ -429,40 +429,97 @@ skillBars.forEach(bar => skillObserver.observe(bar));
       return d.toLocaleDateString('es-ES', { month: 'short', year: 'numeric' });
     };
 
+    // Helper: Language colors map matching GitHub
+    const GITHUB_LANG_COLORS = {
+      'PHP': '#4F5D95',
+      'CSS': '#563D7C',
+      'JavaScript': '#f1e05a',
+      'TypeScript': '#3178c6',
+      'HTML': '#e34c26',
+      'Kotlin': '#7F52FF',
+      'Python': '#3572A5',
+      'Java': '#b07219',
+      'C++': '#f34b7d',
+      'C#': '#178600',
+      'C': '#555555',
+      'Shell': '#89e051',
+      'Blade': '#f7523f',
+      'Vue': '#41b883',
+      'Hack': '#878787',
+      'Dart': '#00B4AB',
+      'Ruby': '#701516',
+      'Go': '#00ADD8',
+      'Rust': '#dea584',
+      'SCSS': '#c6538c',
+      'Swift': '#F05138',
+      'Batchfile': '#C1F12E',
+      'PowerShell': '#012456'
+    };
+
+    const getLangColor = (lang) => {
+      if (!lang) return '#00a8ff';
+      return GITHUB_LANG_COLORS[lang] || '#00a8ff';
+    };
+
     // Fetch languages breakdown for all repos in parallel
     const reposWithLangs = await Promise.all(filteredRepos.map(async repo => {
+      let languagesList = [];
       try {
         if (repo.languages_url) {
           const langRes = await fetch(repo.languages_url, { headers: { 'Accept': 'application/vnd.github+json' } });
           if (langRes.ok) {
             const langData = await langRes.json();
-            const topLangs = Object.keys(langData).slice(0, 4);
-            if (topLangs.length > 0) return { ...repo, topLanguages: topLangs };
+            const totalBytes = Object.values(langData).reduce((sum, b) => sum + b, 0);
+            if (totalBytes > 0) {
+              languagesList = Object.entries(langData)
+                .map(([lang, bytes]) => {
+                  const pct = parseFloat(((bytes / totalBytes) * 100).toFixed(1));
+                  return {
+                    name: lang,
+                    bytes,
+                    pct,
+                    color: getLangColor(lang)
+                  };
+                })
+                .filter(l => l.pct >= 0.1)
+                .sort((a, b) => b.bytes - a.bytes)
+                .slice(0, 5);
+            }
           }
         }
       } catch (e) {
         console.warn('Error al obtener lenguajes para', repo.name, e);
       }
-      return { ...repo, topLanguages: repo.language ? [repo.language] : ['Software'] };
+
+      if (languagesList.length === 0) {
+        const defaultLang = repo.language || 'Software';
+        languagesList = [{
+          name: defaultLang,
+          bytes: 100,
+          pct: 100.0,
+          color: getLangColor(defaultLang)
+        }];
+      }
+
+      return { ...repo, languagesList };
     }));
 
-    // Render cards dynamically with full language badges breakdown
+    // Render cards dynamically with full language badges breakdown & progress bar
     projectsGrid.innerHTML = reposWithLangs.map(repo => {
       const status = getStatusInfo(repo);
       const category = getCategory(repo);
-      const langInfo = getLangInfo(repo.language || (repo.topLanguages && repo.topLanguages[0]));
+      const primaryLang = repo.languagesList && repo.languagesList[0] ? repo.languagesList[0].name : repo.language;
+      const langInfo = getLangInfo(primaryLang);
       const title = formatRepoName(repo.name);
-      const description = repo.description || `Proyecto de ${repo.language || (repo.topLanguages && repo.topLanguages.join(', ')) || 'desarrollo'} publicado en GitHub. Arquitectura limpia y código modular.`;
+      const mainLangsStr = repo.languagesList.map(l => l.name).join(', ');
+      const description = repo.description || `Proyecto de ${mainLangsStr || 'desarrollo'} publicado en GitHub. Arquitectura limpia y código modular.`;
       const pushedDateStr = formatDate(repo.pushed_at || repo.updated_at);
-      const demoUrl = repo.homepage && repo.homepage.trim() !== '' ? repo.homepage : repo.html_url;
       const stars = repo.stargazers_count || 0;
 
       const repoRawUrl = `https://raw.githubusercontent.com/${GITHUB_USER}/${repo.name}/${repo.default_branch || 'main'}/`;
       const initialImgUrl = `${repoRawUrl}imagenes/preview.png`;
 
       const hasHomepage = repo.homepage && repo.homepage.trim() !== '';
-
-      const allTags = [...new Set([...(repo.topLanguages || []), ...(repo.topics || [])])].slice(0, 5);
 
       return `
         <article class="project-card reveal visible" data-category="${category}">
@@ -484,8 +541,19 @@ skillBars.forEach(bar => skillObserver.observe(bar));
             </div>
           </div>
           <div class="project-info">
+            <div class="lang-progress-bar" title="Desglose de lenguajes del repositorio">
+              ${repo.languagesList.map(l => `
+                <div class="lang-progress-segment" style="width: ${l.pct}%; background-color: ${l.color};" title="${l.name}: ${l.pct}%"></div>
+              `).join('')}
+            </div>
             <div class="project-tags">
-              ${allTags.map(tag => `<span class="tag" data-lang="${tag}">${tag}</span>`).join('')}
+              ${repo.languagesList.map(l => `
+                <span class="tag-lang" style="border-color: ${l.color}44; background: ${l.color}15;" title="${l.name}: ${l.pct}%">
+                  <span class="lang-dot" style="background-color: ${l.color}; box-shadow: 0 0 6px ${l.color};"></span>
+                  <span class="lang-name">${l.name}</span>
+                  <span class="lang-pct" style="color: ${l.color};">${l.pct}%</span>
+                </span>
+              `).join('')}
             </div>
             <h3>${title}</h3>
             <p>${description}</p>
