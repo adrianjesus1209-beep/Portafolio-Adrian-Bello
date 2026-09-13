@@ -441,8 +441,8 @@ skillBars.forEach(bar => skillObserver.observe(bar));
       const demoUrl = repo.homepage && repo.homepage.trim() !== '' ? repo.homepage : repo.html_url;
       const stars = repo.stargazers_count || 0;
 
-      const imgBaseUrl = `https://raw.githubusercontent.com/${GITHUB_USER}/${repo.name}/${repo.default_branch || 'main'}/imagenes/`;
-      const rawImgUrl = `${imgBaseUrl}preview.png`;
+      const repoRawUrl = `https://raw.githubusercontent.com/${GITHUB_USER}/${repo.name}/${repo.default_branch || 'main'}/`;
+      const initialImgUrl = `${repoRawUrl}imagenes/preview.png`;
 
       const hasHomepage = repo.homepage && repo.homepage.trim() !== '';
 
@@ -453,7 +453,7 @@ skillBars.forEach(bar => skillObserver.observe(bar));
               ${status.icon}
               <span>${status.label}</span>
             </div>
-            <img src="${rawImgUrl}" alt="${title}" loading="lazy" class="repo-preview-img" data-base="${imgBaseUrl}" onerror="tryNextPreviewImg(this)">
+            <img src="${initialImgUrl}" alt="${title}" loading="lazy" class="repo-preview-img" data-repo-raw="${repoRawUrl}" onerror="tryNextPreviewImg(this)">
             <div class="repo-header-art">
               ${langInfo.icon}
             </div>
@@ -492,23 +492,37 @@ skillBars.forEach(bar => skillObserver.observe(bar));
   }
 })();
 
-// Intelligent Fallback chain for repo cover image
+// Intelligent Fallback chain for repo cover image (handles case-sensitive folder & file names)
 function tryNextPreviewImg(img) {
-  const fallbacks = [
-    'preview.webp', 'preview.jpg', 'preview.jpeg',
-    'preview1.png', 'preview1.webp', 'preview1.jpg',
-    '1.png', '1.webp', '1.jpg', '1.jpeg',
-    'imagen.png', 'imagen.webp', 'imagen.jpg',
-    'imagen1.png', 'imagen1.webp', 'imagen1.jpg',
-    'image.png', 'image.webp', 'image.jpg',
-    'image1.png', 'image1.webp', 'image1.jpg',
-    'foto.png', 'foto.webp', 'foto.jpg',
-    'foto1.png', 'foto1.webp', 'foto1.jpg'
+  const repoRawUrl = img.getAttribute('data-repo-raw');
+  const folderVariants = ['imagenes/', 'Imagenes/', 'images/', 'Images/'];
+  const fileVariants = [
+    'preview.webp', 'preview.png', 'preview.jpg', 'preview.jpeg',
+    'preview1.webp', 'preview1.png', 'preview1.jpg',
+    '1.webp', '1.png', '1.jpg', '1.jpeg',
+    'imagen.webp', 'imagen.png', 'imagen.jpg',
+    'imagen1.webp', 'imagen1.png', 'imagen1.jpg',
+    'image.webp', 'image.png', 'image.jpg',
+    'image1.webp', 'image1.png', 'image1.jpg',
+    'foto.webp', 'foto.png', 'foto.jpg',
+    'foto1.webp', 'foto1.png', 'foto1.jpg'
   ];
-  let idx = parseInt(img.getAttribute('data-fail-idx') || '0');
-  if (idx < fallbacks.length) {
-    img.setAttribute('data-fail-idx', idx + 1);
-    img.src = img.getAttribute('data-base') + fallbacks[idx];
+
+  if (!img._candidatePaths) {
+    const candidatePaths = [];
+    folderVariants.forEach(folder => {
+      fileVariants.forEach(file => {
+        candidatePaths.push(repoRawUrl + folder + file);
+      });
+    });
+    img._candidatePaths = candidatePaths;
+    img._candidateIdx = 0;
+  }
+
+  const idx = img._candidateIdx || 0;
+  if (idx < img._candidatePaths.length) {
+    img._candidateIdx = idx + 1;
+    img.src = img._candidatePaths[idx];
   } else {
     img.style.display = 'none';
     if (img.nextElementSibling && img.nextElementSibling.classList.contains('repo-header-art')) {
@@ -537,25 +551,29 @@ function bindGalleryButtons() {
 async function openGalleryForRepo(repoName, branch, repoTitle) {
   const GITHUB_USER = 'adrianjesus1209-beep';
   const defaultBranch = branch || 'main';
-  const base = `https://raw.githubusercontent.com/${GITHUB_USER}/${repoName}/${defaultBranch}/imagenes/`;
+  const repoRawUrl = `https://raw.githubusercontent.com/${GITHUB_USER}/${repoName}/${defaultBranch}/`;
 
-  const candidateUrls = [];
-  
-  // Cover / Image 1 variations
-  const names1 = ['preview', 'preview1', '1', 'imagen', 'imagen1', 'image', 'image1', 'foto', 'foto1'];
+  const folders = ['imagenes/', 'Imagenes/', 'images/', 'Images/'];
   const exts = ['.png', '.webp', '.jpg', '.jpeg'];
-  
-  names1.forEach(name => {
-    exts.forEach(ext => candidateUrls.push(`${base}${name}${ext}`));
-  });
+  const candidateUrls = [];
 
-  // Images 2 to 5 variations
-  for (let i = 2; i <= 5; i++) {
-    const namesI = [`preview${i}`, `${i}`, `imagen${i}`, `image${i}`, `foto${i}`];
-    namesI.forEach(name => {
+  folders.forEach(folder => {
+    const base = repoRawUrl + folder;
+    
+    // Cover / Image 1 candidates
+    const names1 = ['preview', 'preview1', '1', 'imagen', 'imagen1', 'image', 'image1', 'foto', 'foto1'];
+    names1.forEach(name => {
       exts.forEach(ext => candidateUrls.push(`${base}${name}${ext}`));
     });
-  }
+
+    // Images 2 to 5 candidates
+    for (let i = 2; i <= 5; i++) {
+      const namesI = [`preview${i}`, `${i}`, `imagen${i}`, `image${i}`, `foto${i}`];
+      namesI.forEach(name => {
+        exts.forEach(ext => candidateUrls.push(`${base}${name}${ext}`));
+      });
+    }
+  });
 
   showToast('Buscando capturas del proyecto...');
 
