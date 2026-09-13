@@ -1015,44 +1015,46 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // Universal Copy to Clipboard Event Listener (delegated for max reliability)
-  document.addEventListener('click', async (e) => {
-    const copyBtn = e.target.closest('.btn-copy');
-    if (!copyBtn) return;
-
-    e.preventDefault();
-    e.stopPropagation();
-
-    const textToCopy = copyBtn.getAttribute('data-copy');
+  /* ---- Robust Copy-to-Clipboard Handler with Micro-Animations & Fallbacks ---- */
+  async function handleCopyButtonClick(btn) {
+    const textToCopy = btn.getAttribute('data-copy');
     if (!textToCopy) return;
 
-    const label = copyBtn.getAttribute('title') || 'Dato';
+    // 1. Create Ripple Element inside button
+    const circle = document.createElement('span');
+    circle.classList.add('ripple');
+    const rect = btn.getBoundingClientRect();
+    const size = Math.max(rect.width, rect.height);
+    circle.style.width = circle.style.height = `${size}px`;
+    circle.style.left = `${rect.width / 2 - size / 2}px`;
+    circle.style.top = `${rect.height / 2 - size / 2}px`;
+    btn.appendChild(circle);
+    setTimeout(() => circle.remove(), 600);
+
+    // 2. Perform copy asynchronously with fallback
     let copied = false;
 
-    // 1. Try modern navigator.clipboard API if available
-    if (navigator.clipboard && window.isSecureContext) {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
       try {
         await navigator.clipboard.writeText(textToCopy);
         copied = true;
       } catch (err) {
-        console.warn('navigator.clipboard async error, trying fallback:', err);
+        console.warn('navigator.clipboard failed, fallbacking:', err);
       }
     }
 
-    // 2. Synchronous execCommand fallback (for HTTP localhost, mobile, & non-HTTPS)
     if (!copied) {
       try {
         const textarea = document.createElement('textarea');
         textarea.value = textToCopy;
-        textarea.setAttribute('readonly', '');
         textarea.style.position = 'fixed';
         textarea.style.left = '-9999px';
         textarea.style.top = '-9999px';
         textarea.style.opacity = '0';
+        textarea.setAttribute('readonly', '');
         document.body.appendChild(textarea);
         textarea.focus();
         textarea.select();
-        textarea.setSelectionRange(0, 99999);
         copied = document.execCommand('copy');
         document.body.removeChild(textarea);
       } catch (err) {
@@ -1060,11 +1062,35 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }
 
-    // 3. Show feedback toast
-    if (copied) {
-      showToast(`¡${label} copiado! 📋`);
-    } else {
-      showToast(`Copia este texto: ${textToCopy}`);
+    // 3. Trigger Visual Animations & Toast Feedback
+    const label = btn.getAttribute('title') || 'Dato';
+    showToast(`¡${label} copiado al portapapeles! 📋`);
+
+    // Save original HTML content if not saved
+    if (!btn._originalContent) {
+      btn._originalContent = btn.innerHTML;
+    }
+
+    // Apply copied state
+    btn.classList.add('copied');
+    btn.innerHTML = `<i class="bx bx-check-circle"></i> ¡Copiado!`;
+
+    // Revert after 2.2 seconds
+    clearTimeout(btn._copiedTimeout);
+    btn._copiedTimeout = setTimeout(() => {
+      btn.classList.remove('copied');
+      btn.innerHTML = btn._originalContent;
+      delete btn._originalContent;
+    }, 2200);
+  }
+
+  // Bind using Event Delegation for absolute reliability
+  document.addEventListener('click', (e) => {
+    const copyBtn = e.target.closest('.btn-copy');
+    if (copyBtn) {
+      e.preventDefault();
+      e.stopPropagation();
+      handleCopyButtonClick(copyBtn);
     }
   });
 
