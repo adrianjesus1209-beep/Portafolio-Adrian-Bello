@@ -577,17 +577,91 @@ skillBars.forEach(bar => skillObserver.observe(bar));
 
     function renderFallbackProjects() {
       const FALLBACK_REPOS = [
-        { name: 'ZylosX-STREAMING', language: 'PHP', description: 'Plataforma de streaming de video en directo y bajo demanda con panel de administración y reproductor.', stargazers_count: 5, pushed_at: new Date().toISOString(), html_url: `https://github.com/${GITHUB_USER}/ZylosX-STREAMING`, default_branch: 'main' },
-        { name: 'Gestion-de-Tareas-App', language: 'JavaScript', description: 'Sistema completo de gestión de tareas con estados en tiempo real, drag & drop y métricas.', stargazers_count: 3, pushed_at: new Date().toISOString(), html_url: `https://github.com/${GITHUB_USER}`, default_branch: 'main' },
-        { name: 'E-Commerce-FullStack', language: 'JavaScript', description: 'Tienda virtual interactiva con carrito de compras, pagos y panel administrativo.', stargazers_count: 4, pushed_at: new Date().toISOString(), html_url: `https://github.com/${GITHUB_USER}`, default_branch: 'main' },
-        { name: 'Android-Player-App', language: 'Kotlin', description: 'Aplicación nativa de reproducción multimedia para Android en Kotlin con ExoPlayer.', stargazers_count: 2, pushed_at: new Date().toISOString(), html_url: `https://github.com/${GITHUB_USER}`, default_branch: 'main' },
-        { name: 'Dashboard-Analytics', language: 'TypeScript', description: 'Panel de control con gráficos interactivos, estadísticas en vivo y exportación.', stargazers_count: 4, pushed_at: new Date().toISOString(), html_url: `https://github.com/${GITHUB_USER}`, default_branch: 'main' },
-        { name: 'Landing-Page-Premium', language: 'HTML', description: 'Landing page de alta conversión con modo oscuro, animaciones smooth y diseño responsivo.', stargazers_count: 3, pushed_at: new Date().toISOString(), html_url: `https://github.com/${GITHUB_USER}`, default_branch: 'main' }
+        {
+          name: 'ZylosX-STREAMING',
+          language: 'PHP',
+          languagesList: [
+            { name: 'PHP', bytes: 6500, pct: 65.0, color: '#4F5D95' },
+            { name: 'JavaScript', bytes: 2500, pct: 25.0, color: '#f1e05a' },
+            { name: 'CSS', bytes: 1000, pct: 10.0, color: '#563D7C' }
+          ],
+          description: 'Plataforma de streaming de video en directo y bajo demanda con panel de administración y reproductor personalizado.',
+          stargazers_count: 5,
+          pushed_at: new Date().toISOString(),
+          html_url: `https://github.com/${GITHUB_USER}/ZylosX-STREAMING`,
+          default_branch: 'main'
+        },
+        {
+          name: 'Gestion-de-Tareas-App',
+          language: 'JavaScript',
+          languagesList: [
+            { name: 'JavaScript', bytes: 7000, pct: 70.0, color: '#f1e05a' },
+            { name: 'HTML', bytes: 1800, pct: 18.0, color: '#e34c26' },
+            { name: 'CSS', bytes: 1200, pct: 12.0, color: '#563D7C' }
+          ],
+          description: 'Sistema completo de gestión de tareas con estados en tiempo real, drag & drop y métricas avanzadas.',
+          stargazers_count: 3,
+          pushed_at: new Date().toISOString(),
+          html_url: `https://github.com/${GITHUB_USER}`,
+          default_branch: 'main'
+        },
+        {
+          name: 'E-Commerce-FullStack',
+          language: 'JavaScript',
+          languagesList: [
+            { name: 'JavaScript', bytes: 5500, pct: 55.0, color: '#f1e05a' },
+            { name: 'PHP', bytes: 3500, pct: 35.0, color: '#4F5D95' },
+            { name: 'CSS', bytes: 1000, pct: 10.0, color: '#563D7C' }
+          ],
+          description: 'Tienda virtual interactiva con carrito de compras, integración de pagos y panel administrativo.',
+          stargazers_count: 4,
+          pushed_at: new Date().toISOString(),
+          html_url: `https://github.com/${GITHUB_USER}`,
+          default_branch: 'main'
+        },
+        {
+          name: 'Android-Player-App',
+          language: 'Kotlin',
+          languagesList: [
+            { name: 'Kotlin', bytes: 8500, pct: 85.0, color: '#7F52FF' },
+            { name: 'Java', bytes: 1500, pct: 15.0, color: '#b07219' }
+          ],
+          description: 'Aplicación nativa de reproducción multimedia para Android desarrollada en Kotlin con ExoPlayer.',
+          stargazers_count: 2,
+          pushed_at: new Date().toISOString(),
+          html_url: `https://github.com/${GITHUB_USER}`,
+          default_branch: 'main'
+        },
+        {
+          name: 'Dashboard-Analytics',
+          language: 'TypeScript',
+          languagesList: [
+            { name: 'TypeScript', bytes: 6800, pct: 68.0, color: '#3178c6' },
+            { name: 'HTML', bytes: 2000, pct: 20.0, color: '#e34c26' },
+            { name: 'CSS', bytes: 1200, pct: 12.0, color: '#563D7C' }
+          ],
+          description: 'Panel de control con gráficos interactivos, estadísticas en vivo y exportación de datos en PDF/Excel.',
+          stargazers_count: 4,
+          pushed_at: new Date().toISOString(),
+          html_url: `https://github.com/${GITHUB_USER}`,
+          default_branch: 'main'
+        },
+        {
+          name: 'Landing-Page-Premium',
+          language: 'HTML',
+          languagesList: [
+            { name: 'HTML', bytes: 5000, pct: 50.0, color: '#e34c26' },
+            { name: 'CSS', bytes: 4000, pct: 40.0, color: '#563D7C' },
+            { name: 'JavaScript', bytes: 1000, pct: 10.0, color: '#f1e05a' }
+          ],
+          description: 'Landing page de alta conversión con modo oscuro, animaciones smooth scroll y diseño responsivo.',
+          stargazers_count: 3,
+          pushed_at: new Date().toISOString(),
+          html_url: `https://github.com/${GITHUB_USER}`,
+          default_branch: 'main'
+        }
       ];
-      renderRepoCards(FALLBACK_REPOS.map(r => ({
-        ...r,
-        languagesList: [{ name: r.language, bytes: 100, pct: 100.0, color: getLangColor(r.language) }]
-      })));
+      renderRepoCards(FALLBACK_REPOS);
     }
 
     if (reposWithLangs.length === 0) {
@@ -597,25 +671,9 @@ skillBars.forEach(bar => skillObserver.observe(bar));
     }
 
   } catch (err) {
-    console.warn('Error al cargar repositorios de GitHub, usando fallback:', err);
+    console.warn('Error al cargar repositorios de GitHub, utilizando renderizado completo de fallback:', err);
     try {
-      const FALLBACK_REPOS = [
-        { name: 'ZylosX-STREAMING', language: 'PHP', description: 'Plataforma de streaming de video en directo y bajo demanda con panel de administración.', stargazers_count: 5, pushed_at: new Date().toISOString(), html_url: `https://github.com/${GITHUB_USER}/ZylosX-STREAMING`, default_branch: 'main' },
-        { name: 'Gestion-de-Tareas-App', language: 'JavaScript', description: 'Sistema completo de gestión de tareas con estados en tiempo real y drag & drop.', stargazers_count: 3, pushed_at: new Date().toISOString(), html_url: `https://github.com/${GITHUB_USER}`, default_branch: 'main' },
-        { name: 'E-Commerce-FullStack', language: 'JavaScript', description: 'Tienda virtual interactiva con carrito de compras y panel administrativo.', stargazers_count: 4, pushed_at: new Date().toISOString(), html_url: `https://github.com/${GITHUB_USER}`, default_branch: 'main' },
-        { name: 'Android-Player-App', language: 'Kotlin', description: 'Aplicación nativa de reproducción multimedia para Android desarrollada en Kotlin.', stargazers_count: 2, pushed_at: new Date().toISOString(), html_url: `https://github.com/${GITHUB_USER}`, default_branch: 'main' },
-        { name: 'Dashboard-Analytics', language: 'TypeScript', description: 'Panel de control con gráficos interactivos y estadísticas en vivo.', stargazers_count: 4, pushed_at: new Date().toISOString(), html_url: `https://github.com/${GITHUB_USER}`, default_branch: 'main' },
-        { name: 'Landing-Page-Premium', language: 'HTML', description: 'Landing page de alta conversión con modo oscuro y diseño responsivo.', stargazers_count: 3, pushed_at: new Date().toISOString(), html_url: `https://github.com/${GITHUB_USER}`, default_branch: 'main' }
-      ];
-      projectsGrid.innerHTML = FALLBACK_REPOS.map(r => `
-        <article class="project-card reveal visible" data-category="web">
-          <div class="project-info">
-            <h3>${r.name}</h3>
-            <p>${r.description}</p>
-          </div>
-        </article>
-      `).join('');
-      bindProjectFilters();
+      renderFallbackProjects();
     } catch (e) {
       bindProjectFilters();
     }
