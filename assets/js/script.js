@@ -1037,5 +1037,25 @@ document.addEventListener('DOMContentLoaded', () => {
       showToast(`¡${label} copiado! 📋`);
     });
   });
+
+  // Click QR Code to enlarge in full-screen Lightbox Gallery
+  const qrWrapper = document.querySelector('.qr-img-wrapper');
+  if (qrWrapper) {
+    qrWrapper.addEventListener('click', () => {
+      const qrImg = qrWrapper.querySelector('img');
+      if (qrImg && qrImg.src) {
+        currentGalleryImages = [qrImg.src];
+        currentGalleryIndex = 0;
+        const galleryModal = document.getElementById('gallery-modal');
+        const galleryTitle = document.getElementById('gallery-title');
+        if (galleryTitle) galleryTitle.textContent = 'Código QR - Pago Móvil (0102 - Banco de Venezuela)';
+        renderGalleryState();
+        if (galleryModal) {
+          galleryModal.classList.add('show');
+          galleryModal.setAttribute('aria-hidden', 'false');
+        }
+      }
+    });
+  }
 });
 
