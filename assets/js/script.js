@@ -947,5 +947,95 @@ document.addEventListener('DOMContentLoaded', () => {
       imageWrapper.style.transform = `rotateX(0deg) rotateY(0deg) scale(1)`;
     });
   }
+
+  /* ---- Donation Modal, Tabs & Copy-to-Clipboard ---- */
+  const donateModal = document.getElementById('donate-modal');
+  const donateOverlay = document.getElementById('donate-overlay');
+  const donateClose = document.getElementById('donate-close');
+  const donateTriggers = [
+    document.getElementById('btn-donate-header'),
+    document.getElementById('hero-donate-btn'),
+    document.getElementById('contact-donate-btn')
+  ];
+
+  function openDonateModal() {
+    if (donateModal) {
+      donateModal.classList.add('show');
+      donateModal.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+    }
+  }
+
+  function closeDonateModal() {
+    if (donateModal) {
+      donateModal.classList.remove('show');
+      donateModal.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+    }
+  }
+
+  // Open modal triggers
+  donateTriggers.forEach(btn => {
+    if (btn) {
+      btn.addEventListener('click', openDonateModal);
+    }
+  });
+
+  // Close modal events
+  if (donateClose) donateClose.addEventListener('click', closeDonateModal);
+  if (donateOverlay) donateOverlay.addEventListener('click', closeDonateModal);
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && donateModal && donateModal.classList.contains('show')) {
+      closeDonateModal();
+    }
+  });
+
+  // Tab switching
+  const tabs = document.querySelectorAll('.donate-tab');
+  const panels = document.querySelectorAll('.donate-panel');
+
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      const targetTab = tab.getAttribute('data-tab');
+
+      tabs.forEach(t => {
+        t.classList.remove('active');
+        t.setAttribute('aria-selected', 'false');
+      });
+      panels.forEach(p => p.classList.remove('active'));
+
+      tab.classList.add('active');
+      tab.setAttribute('aria-selected', 'true');
+
+      const targetPanel = document.getElementById(`panel-${targetTab}`);
+      if (targetPanel) {
+        targetPanel.classList.add('active');
+      }
+    });
+  });
+
+  // Copy to clipboard for all .btn-copy elements
+  document.querySelectorAll('.btn-copy').forEach(copyBtn => {
+    copyBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      const textToCopy = copyBtn.getAttribute('data-copy');
+      if (!textToCopy) return;
+
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(textToCopy);
+      } else {
+        const textarea = document.createElement('textarea');
+        textarea.value = textToCopy;
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textarea);
+      }
+
+      const label = copyBtn.getAttribute('title') || 'Dato';
+      showToast(`¡${label} copiado! 📋`);
+    });
+  });
 });
 

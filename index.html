@@ -29,6 +29,9 @@
           <li><a href="#contact" class="nav-link" id="nav-contact">Contacto</a></li>
         </ul>
         <div class="nav-actions">
+          <button type="button" class="btn-donate-nav" id="btn-donate-header" title="Apoyar al desarrollador">
+            <i class="bx bxs-heart"></i> <span>Donar</span>
+          </button>
           <a href="https://wa.me/584128871272" target="_blank" rel="noopener noreferrer" class="btn-hire" id="btn-hire-header">Contrátame</a>
           <button type="button" class="hamburger" id="hamburger" aria-label="Abrir menú" aria-expanded="false">
             <span></span>
@@ -66,6 +69,9 @@
             <a href="#contact" class="btn btn-outline" id="hero-contact-btn">
               <i class="bx bx-message-rounded"></i> Contactar
             </a>
+            <button type="button" class="btn btn-donate-hero" id="hero-donate-btn">
+              <i class="bx bxs-heart"></i> Apoyar / Donar
+            </button>
           </div>
           <div class="home-socials reveal-left">
             <a href="https://github.com/adrianjesus1209-beep" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="GitHub" id="social-github"><i class="fa-brands fa-github"></i></a>
@@ -330,6 +336,20 @@
             <a href="https://www.facebook.com/share/1MFUsnbP3D/" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="Facebook" id="contact-facebook"><i class="fa-brands fa-facebook-f"></i></a>
             <a href="https://x.com/AdrianjesusBel2" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="Twitter" id="contact-twitter"><i class="fa-brands fa-x-twitter"></i></a>
           </div>
+
+          <!-- Banner de Donación en Contacto -->
+          <div class="donate-banner">
+            <div class="donate-banner-icon">
+              <i class="bx bxs-coffee-togo"></i>
+            </div>
+            <div class="donate-banner-text">
+              <h4>¿Te gusta mi trabajo?</h4>
+              <p>Apoya el desarrollo de nuevos proyectos enviando una donación.</p>
+            </div>
+            <button type="button" class="btn-donate-banner" id="contact-donate-btn">
+              <i class="bx bxs-heart"></i> Donar
+            </button>
+          </div>
         </div>
       </div>
     </section>
@@ -366,12 +386,129 @@
       </div>
     </div>
 
+    <!-- ========== DONATION MODAL ========== -->
+    <div id="donate-modal" class="donate-modal" role="dialog" aria-modal="true" aria-labelledby="donate-title" aria-hidden="true">
+      <div class="donate-modal-overlay" id="donate-overlay"></div>
+      <div class="donate-modal-content">
+        <button type="button" class="donate-close" id="donate-close" aria-label="Cerrar modal">&times;</button>
+        
+        <div class="donate-header">
+          <div class="donate-heart-pulse">
+            <i class="bx bxs-heart"></i>
+          </div>
+          <h3 id="donate-title">Apoya al Desarrollador</h3>
+          <p>Tu contribución apoya el mantenimiento de mis proyectos open-source y el desarrollo de nuevas herramientas gratuitas. 💖</p>
+        </div>
+
+        <div class="donate-tabs" role="tablist">
+          <button type="button" class="donate-tab active" data-tab="pago-movil" role="tab" aria-selected="true">
+            <i class="bx bx-mobile-alt"></i> Pago Móvil
+          </button>
+          <button type="button" class="donate-tab" data-tab="paypal" role="tab" aria-selected="false">
+            <i class="bx bxl-paypal"></i> PayPal
+          </button>
+          <button type="button" class="donate-tab" data-tab="binance" role="tab" aria-selected="false">
+            <i class="bx bx-bitcoin"></i> Crypto / Binance
+          </button>
+          <button type="button" class="donate-tab" data-tab="coffee" role="tab" aria-selected="false">
+            <i class="bx bx-coffee-togo"></i> Coffee
+          </button>
+        </div>
+
+        <div class="donate-body">
+          <!-- 1. Pago Móvil (Venezuela) -->
+          <div class="donate-panel active" id="panel-pago-movil" role="tabpanel">
+            <div class="panel-badge"><i class="bx bx-check-circle"></i> Pago Móvil (Venezuela)</div>
+            <div class="info-grid">
+              <div class="info-item">
+                <span class="info-label">Banco</span>
+                <span class="info-val">Mercantil (0105) / Banesco (0134)</span>
+              </div>
+              <div class="info-item">
+                <span class="info-label">Teléfono</span>
+                <div class="copy-row">
+                  <span class="info-val">0412-8871272</span>
+                  <button type="button" class="btn-copy" data-copy="04128871272" title="Copiar teléfono">
+                    <i class="bx bx-copy"></i> Copiar
+                  </button>
+                </div>
+              </div>
+              <div class="info-item">
+                <span class="info-label">Cédula de Identidad</span>
+                <div class="copy-row">
+                  <span class="info-val">V-30.887.127</span>
+                  <button type="button" class="btn-copy" data-copy="30887127" title="Copiar cédula">
+                    <i class="bx bx-copy"></i> Copiar
+                  </button>
+                </div>
+              </div>
+            </div>
+            <p class="donate-note"><i class="bx bx-info-circle"></i> Puedes avisarme vía WhatsApp con tu comprobante. ¡Muchísimas gracias!</p>
+          </div>
+
+          <!-- 2. PayPal -->
+          <div class="donate-panel" id="panel-paypal" role="tabpanel">
+            <div class="panel-badge"><i class="bx bxl-paypal"></i> Donación Internacional (PayPal)</div>
+            <p class="panel-desc">Realiza un envío seguro a través de PayPal:</p>
+            <div class="donate-actions-grid">
+              <a href="https://paypal.me/adrianbello12" target="_blank" rel="noopener noreferrer" class="btn-donate-action paypal-btn">
+                <i class="bx bxl-paypal"></i> Donar en PayPal.me
+              </a>
+              <button type="button" class="btn-donate-action copy-email-btn btn-copy" data-copy="adrianjesus1209@gmail.com">
+                <i class="bx bx-copy"></i> Copiar Correo (adrianjesus1209@gmail.com)
+              </button>
+            </div>
+          </div>
+
+          <!-- 3. Binance Pay / Crypto -->
+          <div class="donate-panel" id="panel-binance" role="tabpanel">
+            <div class="panel-badge"><i class="bx bx-wallet"></i> Binance Pay & Criptomonedas</div>
+            <div class="info-grid">
+              <div class="info-item">
+                <span class="info-label">Binance Pay (Email)</span>
+                <div class="copy-row">
+                  <span class="info-val">adrianjesus1209@gmail.com</span>
+                  <button type="button" class="btn-copy" data-copy="adrianjesus1209@gmail.com" title="Copiar Binance Pay">
+                    <i class="bx bx-copy"></i> Copiar
+                  </button>
+                </div>
+              </div>
+              <div class="info-item">
+                <span class="info-label">USDT (BEP20 - BNB Smart Chain)</span>
+                <div class="copy-row">
+                  <span class="info-val truncate-addr">0x89205A3A3b2A69De6Dbf7f01EDf3ca23AC660638</span>
+                  <button type="button" class="btn-copy" data-copy="0x89205A3A3b2A69De6Dbf7f01EDf3ca23AC660638" title="Copiar dirección USDT">
+                    <i class="bx bx-copy"></i> Copiar Wallet
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 4. Buy Me a Coffee -->
+          <div class="donate-panel" id="panel-coffee" role="tabpanel">
+            <div class="panel-badge"><i class="bx bx-coffee-togo"></i> Cómprame un Café ☕</div>
+            <p class="panel-desc">¿Te gustaría invitarme a un café virtual para apoyar mis horas de desarrollo?</p>
+            <div class="donate-actions-grid">
+              <a href="https://buymeacoffee.com" target="_blank" rel="noopener noreferrer" class="btn-donate-action coffee-btn">
+                <i class="bx bx-coffee-togo"></i> Regalar un Café ☕
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <div class="donate-footer">
+          <span>¡Tu aporte motiva y respalda mi trabajo! Muchas gracias. ❤️</span>
+        </div>
+      </div>
+    </div>
+
     <!-- ========== TOAST MODAL ========== -->
     <div id="toast-modal" class="toast-modal" role="status" aria-live="polite">
       <i class="bx bx-check-circle"></i>
       <span id="toast-message">¡Correo copiado! Redirigiendo...</span>
     </div>
 
-    <script src="assets/js/script.js?v=1.7"></script>
+    <script src="assets/js/script.js?v=1.8"></script>
   </body>
 </html>
