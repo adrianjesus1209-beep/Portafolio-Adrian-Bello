@@ -492,30 +492,41 @@ skillBars.forEach(bar => skillObserver.observe(bar));
   }
 })();
 
-// Intelligent Fallback chain for repo cover image (handles case-sensitive folder & file names)
-function tryNextPreviewImg(img) {
-  const repoRawUrl = img.getAttribute('data-repo-raw');
-  const folderVariants = ['imagenes/', 'Imagenes/', 'images/', 'Images/'];
-  const fileVariants = [
-    'preview.webp', 'preview.png', 'preview.jpg', 'preview.jpeg',
-    'preview1.webp', 'preview1.png', 'preview1.jpg',
-    '1.webp', '1.png', '1.jpg', '1.jpeg',
-    'imagen.webp', 'imagen.png', 'imagen.jpg',
-    'imagen1.webp', 'imagen1.png', 'imagen1.jpg',
-    'image.webp', 'image.png', 'image.jpg',
-    'image1.webp', 'image1.png', 'image1.jpg',
-    'foto.webp', 'foto.png', 'foto.jpg',
-    'foto1.webp', 'foto1.png', 'foto1.jpg'
-  ];
+// Helper to generate candidate image URLs with interleaved folder and extension priorities
+function generateImageCandidates(repoRawUrl, isGallery = false) {
+  const folders = ['imagenes/', 'Imagenes/', 'images/', 'Images/'];
+  const exts = ['.webp', '.png', '.jpg', '.jpeg'];
+  const candidates = [];
 
-  if (!img._candidatePaths) {
-    const candidatePaths = [];
-    folderVariants.forEach(folder => {
-      fileVariants.forEach(file => {
-        candidatePaths.push(repoRawUrl + folder + file);
+  const addInterleaved = (fileNames) => {
+    fileNames.forEach(name => {
+      exts.forEach(ext => {
+        folders.forEach(folder => {
+          candidates.push(`${repoRawUrl}${folder}${name}${ext}`);
+        });
       });
     });
-    img._candidatePaths = candidatePaths;
+  };
+
+  // Cover / Image 1 candidates
+  addInterleaved(['preview1', 'preview', '1', 'imagen1', 'imagen', 'image1', 'image', 'foto1', 'foto']);
+
+  if (isGallery) {
+    // Images 2 through 10 candidates
+    for (let i = 2; i <= 10; i++) {
+      addInterleaved([`preview${i}`, `${i}`, `imagen${i}`, `image${i}`, `foto${i}`]);
+    }
+  }
+
+  return candidates;
+}
+
+// Intelligent Fallback chain for repo cover image
+function tryNextPreviewImg(img) {
+  const repoRawUrl = img.getAttribute('data-repo-raw');
+
+  if (!img._candidatePaths) {
+    img._candidatePaths = generateImageCandidates(repoRawUrl, false);
     img._candidateIdx = 0;
   }
 
@@ -553,27 +564,7 @@ async function openGalleryForRepo(repoName, branch, repoTitle) {
   const defaultBranch = branch || 'main';
   const repoRawUrl = `https://raw.githubusercontent.com/${GITHUB_USER}/${repoName}/${defaultBranch}/`;
 
-  const folders = ['imagenes/', 'Imagenes/', 'images/', 'Images/'];
-  const exts = ['.png', '.webp', '.jpg', '.jpeg'];
-  const candidateUrls = [];
-
-  folders.forEach(folder => {
-    const base = repoRawUrl + folder;
-    
-    // Cover / Image 1 candidates
-    const names1 = ['preview', 'preview1', '1', 'imagen', 'imagen1', 'image', 'image1', 'foto', 'foto1'];
-    names1.forEach(name => {
-      exts.forEach(ext => candidateUrls.push(`${base}${name}${ext}`));
-    });
-
-    // Images 2 to 5 candidates
-    for (let i = 2; i <= 5; i++) {
-      const namesI = [`preview${i}`, `${i}`, `imagen${i}`, `image${i}`, `foto${i}`];
-      namesI.forEach(name => {
-        exts.forEach(ext => candidateUrls.push(`${base}${name}${ext}`));
-      });
-    }
-  });
+  const candidateUrls = generateImageCandidates(repoRawUrl, true);
 
   showToast('Buscando capturas del proyecto...');
 
