@@ -27,6 +27,7 @@
           <li><a href="#skills" class="nav-link" id="nav-skills">Habilidades</a></li>
           <li><a href="#projects" class="nav-link" id="nav-projects">Proyectos</a></li>
           <li><a href="#contact" class="nav-link" id="nav-contact">Contacto</a></li>
+          <li class="mobile-donate-item"><button type="button" class="btn-donate-mobile" id="btn-donate-menu"><i class="bx bxs-heart"></i> Donar al Desarrollador</button></li>
         </ul>
         <div class="nav-actions">
           <button type="button" class="btn-donate-nav" id="btn-donate-header" title="Apoyar al desarrollador">
@@ -282,7 +283,31 @@
       </div>
 
       <div class="projects-grid" id="projects-grid">
-        <!-- Los proyectos se cargan dinámicamente desde la API de GitHub -->
+        <!-- Skeleton Loading State -->
+        <div class="skeleton-card">
+          <div class="skeleton-img shimmer"></div>
+          <div class="skeleton-body">
+            <div class="skeleton-line short shimmer"></div>
+            <div class="skeleton-line medium shimmer"></div>
+            <div class="skeleton-line long shimmer"></div>
+          </div>
+        </div>
+        <div class="skeleton-card">
+          <div class="skeleton-img shimmer"></div>
+          <div class="skeleton-body">
+            <div class="skeleton-line short shimmer"></div>
+            <div class="skeleton-line medium shimmer"></div>
+            <div class="skeleton-line long shimmer"></div>
+          </div>
+        </div>
+        <div class="skeleton-card">
+          <div class="skeleton-img shimmer"></div>
+          <div class="skeleton-body">
+            <div class="skeleton-line short shimmer"></div>
+            <div class="skeleton-line medium shimmer"></div>
+            <div class="skeleton-line long shimmer"></div>
+          </div>
+        </div>
       </div>
 
       <div class="projects-cta reveal">
@@ -521,6 +546,6 @@
       <span id="toast-message">¡Correo copiado! Redirigiendo...</span>
     </div>
 
-    <script src="assets/js/script.js?v=2.1"></script>
+    <script src="assets/js/script.js?v=2.2"></script>
   </body>
 </html>

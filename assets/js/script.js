@@ -506,78 +506,119 @@ skillBars.forEach(bar => skillObserver.observe(bar));
       return { ...repo, languagesList };
     }));
 
-    // Render cards dynamically with full language badges breakdown & progress bar
-    projectsGrid.innerHTML = reposWithLangs.map(repo => {
-      const status = getStatusInfo(repo);
-      const category = getCategory(repo);
-      const primaryLang = repo.languagesList && repo.languagesList[0] ? repo.languagesList[0].name : repo.language;
-      const langInfo = getLangInfo(primaryLang);
-      const title = formatRepoName(repo.name);
-      const mainLangsStr = repo.languagesList.map(l => l.name).join(', ');
-      const description = repo.description || `Proyecto de ${mainLangsStr || 'desarrollo'} publicado en GitHub. Arquitectura limpia y código modular.`;
-      const pushedDateStr = formatDate(repo.pushed_at || repo.updated_at);
-      const stars = repo.stargazers_count || 0;
+    function renderRepoCards(reposList) {
+      projectsGrid.innerHTML = reposList.map(repo => {
+        const status = getStatusInfo(repo);
+        const category = getCategory(repo);
+        const primaryLang = repo.languagesList && repo.languagesList[0] ? repo.languagesList[0].name : repo.language;
+        const langInfo = getLangInfo(primaryLang);
+        const title = formatRepoName(repo.name);
+        const mainLangsStr = repo.languagesList.map(l => l.name).join(', ');
+        const description = repo.description || `Proyecto de ${mainLangsStr || 'desarrollo'} publicado en GitHub. Arquitectura limpia y código modular.`;
+        const pushedDateStr = formatDate(repo.pushed_at || repo.updated_at);
+        const stars = repo.stargazers_count || 0;
 
-      const repoRawUrl = `https://raw.githubusercontent.com/${GITHUB_USER}/${repo.name}/${repo.default_branch || 'main'}/`;
-      const initialImgUrl = `${repoRawUrl}imagenes/preview.png`;
+        const repoRawUrl = `https://raw.githubusercontent.com/${GITHUB_USER}/${repo.name}/${repo.default_branch || 'main'}/`;
+        const initialImgUrl = `${repoRawUrl}imagenes/preview.png`;
 
-      const hasHomepage = repo.homepage && repo.homepage.trim() !== '';
+        const hasHomepage = repo.homepage && repo.homepage.trim() !== '';
 
-      return `
-        <article class="project-card reveal visible" data-category="${category}">
-          <div class="project-img ${langInfo.bg}">
-            <div class="status-badge ${status.class}">
-              ${status.icon}
-              <span>${status.label}</span>
-            </div>
-            <img src="${initialImgUrl}" alt="${title}" loading="lazy" class="repo-preview-img" data-repo-raw="${repoRawUrl}" onerror="tryNextPreviewImg(this)">
-            <div class="repo-header-art">
-              ${langInfo.icon}
-            </div>
-            <div class="project-overlay">
-              <div class="project-links">
-                <button type="button" class="project-link btn-open-gallery" data-repo="${repo.name}" data-branch="${repo.default_branch || 'main'}" data-title="${title}" aria-label="Ver capturas del proyecto" title="Ver Capturas / Galería"><i class="bx bx-show"></i></button>
-                ${hasHomepage ? `<a href="${repo.homepage}" target="_blank" rel="noopener noreferrer" class="project-link" aria-label="Ver sitio web en vivo" title="Ver Demo en Vivo (Sitio Hospedado)"><i class="bx bx-link-external"></i></a>` : ''}
-                <a href="${repo.html_url}" target="_blank" rel="noopener noreferrer" class="project-link" aria-label="Ver código en GitHub" title="Ver Código en GitHub"><i class="bx bxl-github"></i></a>
+        return `
+          <article class="project-card reveal visible" data-category="${category}">
+            <div class="project-img ${langInfo.bg}">
+              <div class="status-badge ${status.class}">
+                ${status.icon}
+                <span>${status.label}</span>
+              </div>
+              <img src="${initialImgUrl}" alt="${title}" loading="lazy" class="repo-preview-img" data-repo-raw="${repoRawUrl}" onerror="tryNextPreviewImg(this)">
+              <div class="repo-header-art">
+                ${langInfo.icon}
+              </div>
+              <div class="project-overlay">
+                <div class="project-links">
+                  <button type="button" class="project-link btn-open-gallery" data-repo="${repo.name}" data-branch="${repo.default_branch || 'main'}" data-title="${title}" aria-label="Ver capturas del proyecto" title="Ver Capturas / Galería"><i class="bx bx-show"></i></button>
+                  ${hasHomepage ? `<a href="${repo.homepage}" target="_blank" rel="noopener noreferrer" class="project-link" aria-label="Ver sitio web en vivo" title="Ver Demo en Vivo (Sitio Hospedado)"><i class="bx bx-link-external"></i></a>` : ''}
+                  <a href="${repo.html_url}" target="_blank" rel="noopener noreferrer" class="project-link" aria-label="Ver código en GitHub" title="Ver Código en GitHub"><i class="bx bxl-github"></i></a>
+                </div>
               </div>
             </div>
-          </div>
-          <div class="project-info">
-            <div class="lang-progress-bar" title="Desglose de lenguajes del repositorio">
-              ${repo.languagesList.map(l => `
-                <div class="lang-progress-segment" style="width: ${l.pct}%; background: linear-gradient(90deg, ${l.color}cc, ${l.color});" title="${l.name}: ${l.pct}%"></div>
-              `).join('')}
+            <div class="project-info">
+              <div class="lang-progress-bar" title="Desglose de lenguajes del repositorio">
+                ${repo.languagesList.map(l => `
+                  <div class="lang-progress-segment" style="width: ${l.pct}%; background: linear-gradient(90deg, ${l.color}cc, ${l.color});" title="${l.name}: ${l.pct}%"></div>
+                `).join('')}
+              </div>
+              <div class="project-tags">
+                ${repo.languagesList.map(l => `
+                  <span class="tag-lang"
+                    style="border-color: ${l.color}55; background: ${l.color}12; box-shadow: inset 0 0 12px ${l.color}10, 0 2px 6px rgba(0,0,0,0.25);"
+                    title="${l.name}: ${l.pct}%">
+                    <span class="lang-dot" style="background-color: ${l.color}; box-shadow: 0 0 8px ${l.color}, 0 0 4px ${l.color}88;"></span>
+                    <span class="lang-name">${l.name}</span>
+                    <span class="lang-pct" style="color: ${l.color};">${l.pct}%</span>
+                  </span>
+                `).join('')}
+              </div>
+              <h3>${title}</h3>
+              <p>${description}</p>
+              <div class="repo-meta">
+                <span class="repo-meta-item" title="Estrellas"><i class="bx bx-star"></i> ${stars}</span>
+                <span class="repo-meta-item" title="Última actualización"><i class="bx bx-time"></i> ${pushedDateStr}</span>
+              </div>
             </div>
-            <div class="project-tags">
-              ${repo.languagesList.map(l => `
-                <span class="tag-lang"
-                  style="border-color: ${l.color}55; background: ${l.color}12; box-shadow: inset 0 0 12px ${l.color}10, 0 2px 6px rgba(0,0,0,0.25);"
-                  title="${l.name}: ${l.pct}%">
-                  <span class="lang-dot" style="background-color: ${l.color}; box-shadow: 0 0 8px ${l.color}, 0 0 4px ${l.color}88;"></span>
-                  <span class="lang-name">${l.name}</span>
-                  <span class="lang-pct" style="color: ${l.color};">${l.pct}%</span>
-                </span>
-              `).join('')}
-            </div>
-            <h3>${title}</h3>
-            <p>${description}</p>
-            <div class="repo-meta">
-              <span class="repo-meta-item" title="Estrellas"><i class="bx bx-star"></i> ${stars}</span>
-              <span class="repo-meta-item" title="Última actualización"><i class="bx bx-time"></i> ${pushedDateStr}</span>
-            </div>
-          </div>
-        </article>
-      `;
-    }).join('');
+          </article>
+        `;
+      }).join('');
 
-    // Re-bind filter events, touch events and gallery clicks
-    bindProjectFilters();
-    bindTouchEvents();
-    bindGalleryButtons();
+      bindProjectFilters();
+      bindTouchEvents();
+      bindGalleryButtons();
+    }
+
+    function renderFallbackProjects() {
+      const FALLBACK_REPOS = [
+        { name: 'ZylosX-STREAMING', language: 'PHP', description: 'Plataforma de streaming de video en directo y bajo demanda con panel de administración y reproductor.', stargazers_count: 5, pushed_at: new Date().toISOString(), html_url: `https://github.com/${GITHUB_USER}/ZylosX-STREAMING`, default_branch: 'main' },
+        { name: 'Gestion-de-Tareas-App', language: 'JavaScript', description: 'Sistema completo de gestión de tareas con estados en tiempo real, drag & drop y métricas.', stargazers_count: 3, pushed_at: new Date().toISOString(), html_url: `https://github.com/${GITHUB_USER}`, default_branch: 'main' },
+        { name: 'E-Commerce-FullStack', language: 'JavaScript', description: 'Tienda virtual interactiva con carrito de compras, pagos y panel administrativo.', stargazers_count: 4, pushed_at: new Date().toISOString(), html_url: `https://github.com/${GITHUB_USER}`, default_branch: 'main' },
+        { name: 'Android-Player-App', language: 'Kotlin', description: 'Aplicación nativa de reproducción multimedia para Android en Kotlin con ExoPlayer.', stargazers_count: 2, pushed_at: new Date().toISOString(), html_url: `https://github.com/${GITHUB_USER}`, default_branch: 'main' },
+        { name: 'Dashboard-Analytics', language: 'TypeScript', description: 'Panel de control con gráficos interactivos, estadísticas en vivo y exportación.', stargazers_count: 4, pushed_at: new Date().toISOString(), html_url: `https://github.com/${GITHUB_USER}`, default_branch: 'main' },
+        { name: 'Landing-Page-Premium', language: 'HTML', description: 'Landing page de alta conversión con modo oscuro, animaciones smooth y diseño responsivo.', stargazers_count: 3, pushed_at: new Date().toISOString(), html_url: `https://github.com/${GITHUB_USER}`, default_branch: 'main' }
+      ];
+      renderRepoCards(FALLBACK_REPOS.map(r => ({
+        ...r,
+        languagesList: [{ name: r.language, bytes: 100, pct: 100.0, color: getLangColor(r.language) }]
+      })));
+    }
+
+    if (reposWithLangs.length === 0) {
+      renderFallbackProjects();
+    } else {
+      renderRepoCards(reposWithLangs);
+    }
 
   } catch (err) {
-    console.warn('Error al cargar repositorios de GitHub:', err);
-    bindProjectFilters();
+    console.warn('Error al cargar repositorios de GitHub, usando fallback:', err);
+    try {
+      const FALLBACK_REPOS = [
+        { name: 'ZylosX-STREAMING', language: 'PHP', description: 'Plataforma de streaming de video en directo y bajo demanda con panel de administración.', stargazers_count: 5, pushed_at: new Date().toISOString(), html_url: `https://github.com/${GITHUB_USER}/ZylosX-STREAMING`, default_branch: 'main' },
+        { name: 'Gestion-de-Tareas-App', language: 'JavaScript', description: 'Sistema completo de gestión de tareas con estados en tiempo real y drag & drop.', stargazers_count: 3, pushed_at: new Date().toISOString(), html_url: `https://github.com/${GITHUB_USER}`, default_branch: 'main' },
+        { name: 'E-Commerce-FullStack', language: 'JavaScript', description: 'Tienda virtual interactiva con carrito de compras y panel administrativo.', stargazers_count: 4, pushed_at: new Date().toISOString(), html_url: `https://github.com/${GITHUB_USER}`, default_branch: 'main' },
+        { name: 'Android-Player-App', language: 'Kotlin', description: 'Aplicación nativa de reproducción multimedia para Android desarrollada en Kotlin.', stargazers_count: 2, pushed_at: new Date().toISOString(), html_url: `https://github.com/${GITHUB_USER}`, default_branch: 'main' },
+        { name: 'Dashboard-Analytics', language: 'TypeScript', description: 'Panel de control con gráficos interactivos y estadísticas en vivo.', stargazers_count: 4, pushed_at: new Date().toISOString(), html_url: `https://github.com/${GITHUB_USER}`, default_branch: 'main' },
+        { name: 'Landing-Page-Premium', language: 'HTML', description: 'Landing page de alta conversión con modo oscuro y diseño responsivo.', stargazers_count: 3, pushed_at: new Date().toISOString(), html_url: `https://github.com/${GITHUB_USER}`, default_branch: 'main' }
+      ];
+      projectsGrid.innerHTML = FALLBACK_REPOS.map(r => `
+        <article class="project-card reveal visible" data-category="web">
+          <div class="project-info">
+            <h3>${r.name}</h3>
+            <p>${r.description}</p>
+          </div>
+        </article>
+      `).join('');
+      bindProjectFilters();
+    } catch (e) {
+      bindProjectFilters();
+    }
   }
 })();
 
@@ -955,7 +996,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const donateTriggers = [
     document.getElementById('btn-donate-header'),
     document.getElementById('hero-donate-btn'),
-    document.getElementById('contact-donate-btn')
+    document.getElementById('contact-donate-btn'),
+    document.getElementById('btn-donate-menu')
   ];
 
   function openDonateModal() {

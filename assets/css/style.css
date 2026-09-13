@@ -1882,6 +1882,120 @@ section {
   .about-stats   { gap: 2rem; }
   .exp-badge     { bottom: -2rem; right: -1rem; }
   .footer        { flex-direction: column; gap: 2rem; }
+
+  .navbar {
+    padding: 1.5rem 4%;
+  }
+
+  .nav-actions {
+    gap: 0.8rem;
+  }
+
+  .btn-hire {
+    padding: 0.6rem 1.2rem;
+    font-size: 1.25rem;
+  }
+
+  .btn-donate-nav {
+    padding: 0.6rem 1rem;
+    font-size: 1.2rem;
+  }
+
+  .logo {
+    font-size: 2.2rem;
+  }
+
+  .back-to-top {
+    bottom: 2rem;
+    right: 1.8rem;
+    width: 4.4rem;
+    height: 4.4rem;
+    font-size: 2.2rem;
+  }
+}
+
+/* Skeleton Loading Shimmer for Projects Grid */
+.skeleton-card {
+  background: var(--bg2);
+  border: 1px solid var(--glass-border);
+  border-radius: 1.6rem;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  height: 38rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.skeleton-img {
+  width: 100%;
+  height: 20rem;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.skeleton-body {
+  padding: 2.2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.4rem;
+}
+
+.skeleton-line {
+  height: 1.4rem;
+  border-radius: 0.6rem;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.skeleton-line.short { width: 35%; }
+.skeleton-line.medium { width: 65%; }
+.skeleton-line.long { width: 90%; }
+
+.shimmer {
+  position: relative;
+  overflow: hidden;
+}
+
+.shimmer::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.08) 50%, transparent 100%);
+  animation: shimmerAnim 1.5s infinite;
+}
+
+@keyframes shimmerAnim {
+  100% { transform: translateX(100%); }
+}
+
+/* Mobile Donate Item inside Hamburger Menu */
+.mobile-donate-item {
+  display: none;
+  width: 100%;
+  text-align: center;
+  padding: 0 2rem;
+}
+
+.btn-donate-mobile {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.8rem;
+  font-size: 1.6rem;
+  font-weight: 600;
+  color: #fff;
+  background: linear-gradient(135deg, #ec4899 0%, #f43f5e 100%);
+  border: none;
+  padding: 1.2rem 2.4rem;
+  border-radius: 5rem;
+  cursor: pointer;
+  box-shadow: 0 8px 25px rgba(236, 72, 153, 0.4);
+  width: 100%;
+}
+
+@media (max-width: 900px) {
+  .mobile-donate-item {
+    display: block;
+  }
 }
 
 /* =============================================
